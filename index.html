@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SEO Brain — control panel</title>
+<meta name="description" content="The permanent knowledge system for an SEO career: knowledge chains, playbooks, operations, templates and rituals.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --ink:#131A22; --ink-2:#3D4A57; --ink-3:#6B7885;
+  --paper:#E7EBEE; --panel:#FFFFFF; --panel-2:#F4F6F8;
+  --rule:#C9D2DA; --rule-2:#E1E7EC;
+  --link:#1B4F9C;
+  --seed:#8C98A8; --growing:#C08320; --evergreen:#2E7D5B; --deprecated:#A34B3C;
+  --shadow:0 1px 2px rgba(19,26,34,.06),0 8px 24px -16px rgba(19,26,34,.28);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --display:"Space Grotesk","IBM Plex Sans",sans-serif;
+}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--link);text-decoration:none;border-bottom:1px solid rgba(27,79,156,.28)}
+a:hover{border-bottom-color:var(--link)}
+h1,h2,h3,h4{font-family:var(--display);font-weight:600;letter-spacing:-.01em;line-height:1.2;margin:0}
+code,kbd{font-family:var(--mono);font-size:.86em}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:2px}
+
+/* shell */
+.shell{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh}
+.rail{background:var(--ink);color:#DCE3EA;padding:22px 0 40px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{padding:0 20px 18px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:14px}
+.brand h1{font-size:19px;color:#fff;letter-spacing:-.02em}
+.brand p{margin:6px 0 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:#7D8B99}
+.nav{display:flex;flex-direction:column;gap:1px;padding:0 8px}
+.nav button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:baseline;
+  padding:8px 12px;border-radius:5px;font-size:13.5px;color:#B9C4CE}
+.nav button .num{font-family:var(--mono);font-size:10.5px;color:#6E7C8A;min-width:20px}
+.nav button:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav button[aria-current="true"]{background:#F4F6F8;color:var(--ink);font-weight:500}
+.nav button[aria-current="true"] .num{color:var(--ink-3)}
+.rail-foot{padding:20px 20px 0;margin-top:20px;border-top:1px solid rgba(255,255,255,.1);
+  font-size:11.5px;color:#7D8B99;line-height:1.5}
+.rail-foot code{color:#AEBAC6;font-size:11px}
+
+main{padding:0 0 80px;min-width:0}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(231,235,238,.9);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+  padding:12px 32px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.search{flex:1 1 240px;display:flex;align-items:center;gap:8px;background:var(--panel);
+  border:1px solid var(--rule);border-radius:6px;padding:7px 11px;min-width:0}
+.search input{all:unset;flex:1;font-family:var(--sans);font-size:14px;min-width:0;color:var(--ink)}
+.search .hint{font-family:var(--mono);font-size:10px;color:var(--ink-3);
+  border:1px solid var(--rule);border-radius:3px;padding:1px 5px}
+.wrap{padding:34px 32px 0;max-width:1000px}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 10px}
+.lede{font-size:16.5px;color:var(--ink-2);max-width:64ch;margin:12px 0 0}
+section[hidden]{display:none}
+.sec-h{margin-bottom:26px}
+.sec-h h2{font-size:27px}
+
+/* panels */
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:9px;
+  box-shadow:var(--shadow);padding:22px;margin:22px 0}
+.panel > h3{font-size:16px;margin-bottom:4px}
+.panel .sub{font-size:13px;color:var(--ink-3);margin:0 0 16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+
+/* master map — the signature */
+.map{margin:26px 0 0;background:var(--panel);border:1px solid var(--rule);border-radius:9px;
+  box-shadow:var(--shadow);overflow:hidden}
+.map-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+  padding:20px 22px 16px;border-bottom:1px solid var(--rule-2);flex-wrap:wrap}
+.map-head h3{font-size:16px}
+.map-head p{margin:5px 0 0;font-size:13px;color:var(--ink-3);max-width:52ch}
+.coverage{text-align:right;font-family:var(--mono)}
+.coverage b{display:block;font-size:30px;font-weight:500;letter-spacing:-.02em;line-height:1}
+.coverage span{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.chain-row{display:grid;grid-template-columns:26px minmax(120px,1.1fr) minmax(150px,2fr) 46px;
+  gap:14px;align-items:center;width:100%;padding:11px 22px;border:0;background:none;
+  border-top:1px solid var(--rule-2);cursor:pointer;text-align:left;font:inherit;color:inherit}
+.chain-row:first-of-type{border-top:0}
+.chain-row:hover{background:var(--panel-2)}
+.chain-row .cn{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+.chain-row .cname{font-size:14px;font-weight:500}
+.dots{display:flex;gap:4px;flex-wrap:wrap}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--rule);
+  border:1px solid #B9C3CC;flex:0 0 auto}
+.dot.on{background:var(--evergreen);border-color:var(--evergreen)}
+.pct{font-family:var(--mono);font-size:12px;color:var(--ink-2);text-align:right}
+
+/* chain detail */
+.chain-card{background:var(--panel);border:1px solid var(--rule);border-radius:9px;
+  box-shadow:var(--shadow);padding:20px;margin:16px 0}
+.chain-card header{display:flex;justify-content:space-between;gap:12px;align-items:baseline;
+  padding-bottom:12px;border-bottom:1px solid var(--rule-2);margin-bottom:6px;flex-wrap:wrap}
+.chain-card h3{font-size:16px}
+.chain-card .home{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.ladder{list-style:none;margin:0;padding:0}
+.node{display:flex;gap:12px;align-items:flex-start;padding:9px 0;position:relative}
+.node:not(:last-child)::after{content:"";position:absolute;left:9px;top:28px;bottom:-2px;
+  width:1px;background:var(--rule)}
+.node .tick{all:unset;cursor:pointer;width:19px;height:19px;border:1.5px solid #A9B4BF;
+  border-radius:50%;flex:0 0 auto;margin-top:2px;background:var(--panel);
+  display:grid;place-items:center;position:relative;z-index:1}
+.node .tick:hover{border-color:var(--evergreen)}
+.node.done .tick{background:var(--evergreen);border-color:var(--evergreen)}
+.node .tick svg{width:10px;height:10px;opacity:0}
+.node.done .tick svg{opacity:1}
+.node .body{min-width:0}
+.node .t{font-size:14px}
+.node.done .t{color:var(--ink-3)}
+.node .p{font-family:var(--mono);font-size:11px;color:var(--ink-3);word-break:break-all}
+.node .p a{border-bottom-color:transparent}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:400;
+  padding:0 12px 8px 0;border-bottom:1px solid var(--rule)}
+td{padding:9px 12px 9px 0;border-bottom:1px solid var(--rule-2);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td code{background:var(--panel-2);padding:1px 5px;border-radius:3px}
+
+/* folder cards */
+.fcard{background:var(--panel);border:1px solid var(--rule);border-radius:9px;padding:17px;
+  box-shadow:var(--shadow)}
+.fcard .fp{font-family:var(--mono);font-size:12px;color:var(--link);display:block;margin-bottom:3px}
+.fcard h4{font-size:14.5px;margin-bottom:7px}
+.fcard p{margin:0;font-size:13px;color:var(--ink-2)}
+.fcard .n{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);
+  margin-top:11px;padding-top:9px;border-top:1px solid var(--rule-2)}
+
+/* pills + status legend */
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;
+  border:1px solid var(--rule);border-radius:20px;padding:3px 10px;color:var(--ink-2);
+  background:var(--panel)}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--seed);display:block}
+.pill.growing i{background:var(--growing)} .pill.evergreen i{background:var(--evergreen)}
+.pill.deprecated i{background:var(--deprecated)}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+
+/* code + copy */
+.copybar{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  border-bottom:1px solid var(--rule-2);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap}
+.act{all:unset;cursor:pointer;font-family:var(--mono);font-size:11.5px;
+  border:1px solid var(--rule);border-radius:5px;padding:6px 11px;background:var(--panel-2);
+  color:var(--ink);white-space:nowrap;display:inline-block}
+.act:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.act.on{background:var(--evergreen);border-color:var(--evergreen);color:#fff}
+pre{margin:0;background:#0F1620;color:#D7DEE6;border-radius:7px;padding:16px;overflow:auto;
+  font-family:var(--mono);font-size:12px;line-height:1.6;max-height:420px}
+pre::-webkit-scrollbar{height:9px;width:9px}
+pre::-webkit-scrollbar-thumb{background:#3A4653;border-radius:9px}
+
+/* template list */
+.tlist{display:grid;gap:10px}
+.titem{background:var(--panel);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.titem > summary{cursor:pointer;padding:13px 16px;display:grid;
+  grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;list-style:none}
+.titem > summary::-webkit-details-marker{display:none}
+.titem[open] > summary{border-bottom:1px solid var(--rule-2);background:var(--panel-2)}
+.titem summary:hover{background:var(--panel-2)}
+.titem .tt{font-size:14px;font-weight:500}
+.titem .tm{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:2px}
+.titem .tbody{padding:14px 16px 16px}
+
+/* checklists */
+.chk{list-style:none;margin:0;padding:0}
+.chk li{display:flex;gap:11px;align-items:flex-start;padding:8px 0;
+  border-bottom:1px solid var(--rule-2);font-size:13.5px}
+.chk li:last-child{border-bottom:0}
+.chk input{margin:4px 0 0;accent-color:var(--evergreen);width:16px;height:16px;flex:0 0 auto}
+.chk li.done label{color:var(--ink-3);text-decoration:line-through;text-decoration-thickness:1px}
+
+/* repo link setting */
+.repo{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.repo input{font-family:var(--mono);font-size:12px;padding:7px 10px;border:1px solid var(--rule);
+  border-radius:5px;background:var(--panel);min-width:min(340px,100%);color:var(--ink)}
+.note{font-size:12.5px;color:var(--ink-3);margin:10px 0 0}
+
+/* search results */
+.results{display:grid;gap:8px}
+.result{background:var(--panel);border:1px solid var(--rule);border-radius:7px;padding:12px 14px;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;
+  cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.result:hover{border-color:var(--ink-3)}
+.result .rt{font-size:14px}
+.result .rk{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3)}
+.empty{padding:30px;text-align:center;color:var(--ink-3);font-size:14px;
+  border:1px dashed var(--rule);border-radius:9px}
+
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;height:auto;padding-bottom:18px}
+  .nav{flex-direction:row;overflow-x:auto;gap:4px;padding:0 12px 4px}
+  .nav button{white-space:nowrap}
+  .nav button .num{display:none}
+  .rail-foot{display:none}
+  .topbar,.wrap{padding-left:18px;padding-right:18px}
+  .chain-row{grid-template-columns:20px minmax(90px,1fr) 40px;gap:10px}
+  .chain-row .dots{display:none}
+}
+@media (prefers-reduced-motion:no-preference){
+  .panel,.fcard,.chain-card,.map{animation:rise .34s cubic-bezier(.2,.7,.3,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+}
+@media print{.rail,.topbar{display:none}.shell{display:block}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">
+      <h1>SEO Brain</h1>
+      <p>Second brain · v0.2</p>
+    </div>
+    <nav class="nav">
+      <button data-go="overview"><span class="num">00</span>Overview</button>
+      <button data-go="folders"><span class="num">01</span>Structure</button>
+      <button data-go="knowledge"><span class="num">02</span>Knowledge chains</button>
+      <button data-go="playbooks"><span class="num">03</span>Playbooks</button>
+      <button data-go="operations"><span class="num">04</span>Operations</button>
+      <button data-go="content"><span class="num">05</span>Content engine</button>
+      <button data-go="rituals"><span class="num">06</span>Rituals</button>
+      <button data-go="standard"><span class="num">07</span>Standard</button>
+      <button data-go="templates"><span class="num">08</span>Templates</button>
+      <button data-go="briefing"><span class="num">09</span>Agent briefing</button>
+    </nav>
+    <div class="rail-foot">
+      Generated from the repository by<br><code>tools/build-dashboard.py</code>
+    </div>
+  </aside>
+  <main>
+    <div class="topbar">
+      <div class="search">
+        <input id="q" type="search" placeholder="Search concepts, templates, playbooks" spellcheck="false" aria-label="Search">
+        <span class="hint">/</span>
+      </div>
+    </div>
+    <div class="wrap" id="view"></div>
+  </main>
+</div>
+<script>window.__BRAIN__ = {"generated": "2026-07-25", "folders": [{"path": "00-meta", "tagline": "The rules of the system", "purpose": "Documentation standard, naming conventions, taxonomy, workflows, master knowledge map, agent briefing, and the full template library. No SEO knowledge lives here — only the rules that keep the SEO knowledge consistent and findable.", "files": 31}, {"path": "10-knowledge", "tagline": "The encyclopedia", "purpose": "Evergreen concepts. No dates, no client names, no tactic-of-the-month. 16 domain folders, each with its own concept chain. This is what a career could be rebuilt from.", "files": 1}, {"path": "15-business-playbooks", "tagline": "Industry playbooks", "purpose": "What is different per vertical: search behaviour, strategy, keyword landscape, entities, topical maps, content strategy, local considerations, AEO/GEO opportunities, realistic KPIs. Each carries an evidence log that grows from theory into tested knowledge.", "files": 1}, {"path": "20-operations", "tagline": "How work gets done", "purpose": "SOPs, binary checklists, a client deliverable template for every document a client ever receives, an agency simulator for practice projects, and internal ops (pricing, scoping, QA).", "files": 1}, {"path": "30-clients", "tagline": "Client workspaces", "purpose": "One folder per client with a fixed nine-folder shape. Client work instantiates templates and records the version used. Credentials are never stored — only a note of where access lives.", "files": 1}, {"path": "40-portfolio", "tagline": "Proof of skill", "purpose": "Case studies, sanitised deliverable samples, one-pagers, redaction rules, and a skills matrix mapping each case study to the concepts it proves. Client work and self-directed projects are always labelled distinctly.", "files": 1}, {"path": "50-content-engine", "tagline": "Knowledge into content", "purpose": "Every evergreen concept becomes eleven assets, all derived from one source note so the message never contradicts itself. When the source changes, its assets are flagged stale.", "files": 1}, {"path": "60-journal", "tagline": "The record", "purpose": "Dated and append-only: daily learning, mistakes, weekly and monthly reviews. Every mistake entry ends with a systemic fix, so the error is prevented by a checklist rather than by memory.", "files": 1}, {"path": "70-radar", "tagline": "Industry intelligence", "purpose": "Dated, possibly-temporary knowledge, kept out of the encyclopedia so it stays stable. Every entry separates confirmed from inferred. Held true 60+ days and applied in real work? It graduates into 10-knowledge.", "files": 1}, {"path": "80-library", "tagline": "Reusable inputs", "purpose": "Prompts, tool profiles, named frameworks, external references, glossary, and benchmark data.", "files": 1}, {"path": "90-archive", "tagline": "Nothing is deleted", "purpose": "Deprecated tactics, retired SOPs, superseded template versions, closed engagements. Every archived file states why it was retired and what replaced it.", "files": 1}], "chains": [{"n": 1, "name": "How search engines work", "home": "10-knowledge/02-technical-seo", "nodes": [{"id": "10-knowledge/01-fundamentals/search-fundamentals", "title": "Search Fundamentals", "path": "10-knowledge/01-fundamentals/search-fundamentals.md"}, {"id": "10-knowledge/02-technical-seo/crawling", "title": "Crawling", "path": "10-knowledge/02-technical-seo/crawling.md"}, {"id": "10-knowledge/02-technical-seo/robots-txt", "title": "Robots.txt", "path": "10-knowledge/02-technical-seo/robots-txt.md"}, {"id": "10-knowledge/02-technical-seo/crawl-budget", "title": "Crawl Budget", "path": "10-knowledge/02-technical-seo/crawl-budget.md"}, {"id": "10-knowledge/02-technical-seo/xml-sitemaps", "title": "XML Sitemaps", "path": "10-knowledge/02-technical-seo/xml-sitemaps.md"}, {"id": "10-knowledge/02-technical-seo/rendering", "title": "Rendering", "path": "10-knowledge/02-technical-seo/rendering.md"}, {"id": "10-knowledge/02-technical-seo/indexing", "title": "Indexing", "path": "10-knowledge/02-technical-seo/indexing.md"}, {"id": "10-knowledge/02-technical-seo/canonicalisation", "title": "Canonicalisation", "path": "10-knowledge/02-technical-seo/canonicalisation.md"}, {"id": "10-knowledge/01-fundamentals/ranking-systems", "title": "Ranking Systems", "path": "10-knowledge/01-fundamentals/ranking-systems.md"}, {"id": "10-knowledge/01-fundamentals/serp-features", "title": "SERP Features", "path": "10-knowledge/01-fundamentals/serp-features.md"}]}, {"n": 2, "name": "Site architecture", "home": "10-knowledge/02-technical-seo", "nodes": [{"id": "10-knowledge/02-technical-seo/site-architecture", "title": "Site Architecture", "path": "10-knowledge/02-technical-seo/site-architecture.md"}, {"id": "10-knowledge/02-technical-seo/url-structure", "title": "URL Structure", "path": "10-knowledge/02-technical-seo/url-structure.md"}, {"id": "10-knowledge/14-strategy/internal-linking", "title": "Internal Linking", "path": "10-knowledge/14-strategy/internal-linking.md"}, {"id": "10-knowledge/02-technical-seo/crawl-depth", "title": "Crawl Depth", "path": "10-knowledge/02-technical-seo/crawl-depth.md"}, {"id": "10-knowledge/02-technical-seo/pagination-and-faceted-navigation", "title": "Pagination and Faceted Navigation", "path": "10-knowledge/02-technical-seo/pagination-and-faceted-navigation.md"}, {"id": "10-knowledge/02-technical-seo/log-file-analysis", "title": "Log File Analysis", "path": "10-knowledge/02-technical-seo/log-file-analysis.md"}]}, {"n": 3, "name": "Meaning and entities", "home": "10-knowledge/06-semantic-seo", "nodes": [{"id": "10-knowledge/06-semantic-seo/entities", "title": "Entities", "path": "10-knowledge/06-semantic-seo/entities.md"}, {"id": "10-knowledge/06-semantic-seo/entity-salience", "title": "Entity Salience", "path": "10-knowledge/06-semantic-seo/entity-salience.md"}, {"id": "10-knowledge/07-structured-data/structured-data", "title": "Structured Data", "path": "10-knowledge/07-structured-data/structured-data.md"}, {"id": "10-knowledge/06-semantic-seo/knowledge-graph", "title": "Knowledge Graph", "path": "10-knowledge/06-semantic-seo/knowledge-graph.md"}, {"id": "10-knowledge/06-semantic-seo/semantic-search", "title": "Semantic Search", "path": "10-knowledge/06-semantic-seo/semantic-search.md"}, {"id": "10-knowledge/14-strategy/topical-authority", "title": "Topical Authority", "path": "10-knowledge/14-strategy/topical-authority.md"}, {"id": "10-knowledge/08-ai-search/ai-search-visibility", "title": "AI Search Visibility", "path": "10-knowledge/08-ai-search/ai-search-visibility.md"}]}, {"n": 4, "name": "Research to strategy", "home": "10-knowledge/13-research", "nodes": [{"id": "10-knowledge/13-research/keyword-research", "title": "Keyword Research", "path": "10-knowledge/13-research/keyword-research.md"}, {"id": "10-knowledge/13-research/search-intent", "title": "Search Intent", "path": "10-knowledge/13-research/search-intent.md"}, {"id": "10-knowledge/13-research/serp-analysis", "title": "SERP Analysis", "path": "10-knowledge/13-research/serp-analysis.md"}, {"id": "10-knowledge/13-research/competitor-research", "title": "Competitor Research", "path": "10-knowledge/13-research/competitor-research.md"}, {"id": "10-knowledge/13-research/entity-research", "title": "Entity Research", "path": "10-knowledge/13-research/entity-research.md"}, {"id": "10-knowledge/14-strategy/topical-maps", "title": "Topical Maps", "path": "10-knowledge/14-strategy/topical-maps.md"}, {"id": "10-knowledge/05-content-seo/content-strategy", "title": "Content Strategy", "path": "10-knowledge/05-content-seo/content-strategy.md"}, {"id": "10-knowledge/05-content-seo/editorial-calendar", "title": "Editorial Calendar", "path": "10-knowledge/05-content-seo/editorial-calendar.md"}]}, {"n": 5, "name": "Content and quality", "home": "10-knowledge/05-content-seo", "nodes": [{"id": "10-knowledge/05-content-seo/content-types", "title": "Content Types", "path": "10-knowledge/05-content-seo/content-types.md"}, {"id": "10-knowledge/05-content-seo/search-intent-matching", "title": "Search Intent Matching", "path": "10-knowledge/05-content-seo/search-intent-matching.md"}, {"id": "10-knowledge/03-on-page-seo/on-page-optimisation", "title": "On-Page Optimisation", "path": "10-knowledge/03-on-page-seo/on-page-optimisation.md"}, {"id": "10-knowledge/05-content-seo/e-e-a-t", "title": "E-E-A-T", "path": "10-knowledge/05-content-seo/e-e-a-t.md"}, {"id": "10-knowledge/05-content-seo/content-refresh", "title": "Content Refresh", "path": "10-knowledge/05-content-seo/content-refresh.md"}, {"id": "10-knowledge/05-content-seo/content-pruning", "title": "Content Pruning", "path": "10-knowledge/05-content-seo/content-pruning.md"}, {"id": "10-knowledge/05-content-seo/cannibalisation", "title": "Cannibalisation", "path": "10-knowledge/05-content-seo/cannibalisation.md"}]}, {"n": 6, "name": "Authority", "home": "10-knowledge/04-off-page-seo", "nodes": [{"id": "10-knowledge/04-off-page-seo/links-as-signals", "title": "Links as Signals", "path": "10-knowledge/04-off-page-seo/links-as-signals.md"}, {"id": "10-knowledge/04-off-page-seo/link-quality", "title": "Link Quality", "path": "10-knowledge/04-off-page-seo/link-quality.md"}, {"id": "10-knowledge/04-off-page-seo/anchor-text", "title": "Anchor Text", "path": "10-knowledge/04-off-page-seo/anchor-text.md"}, {"id": "10-knowledge/04-off-page-seo/digital-pr", "title": "Digital PR", "path": "10-knowledge/04-off-page-seo/digital-pr.md"}, {"id": "10-knowledge/04-off-page-seo/link-prospecting", "title": "Link Prospecting", "path": "10-knowledge/04-off-page-seo/link-prospecting.md"}, {"id": "10-knowledge/04-off-page-seo/outreach", "title": "Outreach", "path": "10-knowledge/04-off-page-seo/outreach.md"}, {"id": "10-knowledge/04-off-page-seo/link-risk-and-disavow", "title": "Link Risk and Disavow", "path": "10-knowledge/04-off-page-seo/link-risk-and-disavow.md"}, {"id": "10-knowledge/04-off-page-seo/brand-signals", "title": "Brand Signals", "path": "10-knowledge/04-off-page-seo/brand-signals.md"}]}, {"n": 7, "name": "AI search", "home": "10-knowledge/08-ai-search", "nodes": [{"id": "10-knowledge/08-ai-search/ai-search-landscape", "title": "AI Search Landscape", "path": "10-knowledge/08-ai-search/ai-search-landscape.md"}, {"id": "10-knowledge/08-ai-search/how-llms-retrieve", "title": "How LLMs Retrieve", "path": "10-knowledge/08-ai-search/how-llms-retrieve.md"}, {"id": "10-knowledge/08-ai-search/aeo", "title": "AEO", "path": "10-knowledge/08-ai-search/aeo.md"}, {"id": "10-knowledge/08-ai-search/geo", "title": "GEO", "path": "10-knowledge/08-ai-search/geo.md"}, {"id": "10-knowledge/08-ai-search/google-ai-mode-and-ai-overviews", "title": "Google AI Mode and AI Overviews", "path": "10-knowledge/08-ai-search/google-ai-mode-and-ai-overviews.md"}, {"id": "10-knowledge/08-ai-search/chatgpt-search", "title": "ChatGPT Search", "path": "10-knowledge/08-ai-search/chatgpt-search.md"}, {"id": "10-knowledge/08-ai-search/perplexity", "title": "Perplexity", "path": "10-knowledge/08-ai-search/perplexity.md"}, {"id": "10-knowledge/08-ai-search/gemini", "title": "Gemini", "path": "10-knowledge/08-ai-search/gemini.md"}, {"id": "10-knowledge/08-ai-search/llm-visibility-measurement", "title": "LLM Visibility Measurement", "path": "10-knowledge/08-ai-search/llm-visibility-measurement.md"}]}, {"n": 8, "name": "Local", "home": "10-knowledge/09-local-seo", "nodes": [{"id": "10-knowledge/09-local-seo/local-ranking-factors", "title": "Local Ranking Factors", "path": "10-knowledge/09-local-seo/local-ranking-factors.md"}, {"id": "10-knowledge/09-local-seo/google-business-profile", "title": "Google Business Profile", "path": "10-knowledge/09-local-seo/google-business-profile.md"}, {"id": "10-knowledge/09-local-seo/nap-and-citations", "title": "NAP and Citations", "path": "10-knowledge/09-local-seo/nap-and-citations.md"}, {"id": "10-knowledge/09-local-seo/reviews", "title": "Reviews", "path": "10-knowledge/09-local-seo/reviews.md"}, {"id": "10-knowledge/09-local-seo/local-landing-pages", "title": "Local Landing Pages", "path": "10-knowledge/09-local-seo/local-landing-pages.md"}, {"id": "10-knowledge/09-local-seo/multi-location", "title": "Multi-Location", "path": "10-knowledge/09-local-seo/multi-location.md"}, {"id": "10-knowledge/09-local-seo/local-link-building", "title": "Local Link Building", "path": "10-knowledge/09-local-seo/local-link-building.md"}]}, {"n": 9, "name": "E-commerce", "home": "10-knowledge/10-ecommerce-seo", "nodes": [{"id": "10-knowledge/10-ecommerce-seo/e-commerce-architecture", "title": "E-commerce Architecture", "path": "10-knowledge/10-ecommerce-seo/e-commerce-architecture.md"}, {"id": "10-knowledge/10-ecommerce-seo/category-pages", "title": "Category Pages", "path": "10-knowledge/10-ecommerce-seo/category-pages.md"}, {"id": "10-knowledge/10-ecommerce-seo/product-pages", "title": "Product Pages", "path": "10-knowledge/10-ecommerce-seo/product-pages.md"}, {"id": "10-knowledge/10-ecommerce-seo/faceted-navigation", "title": "Faceted Navigation", "path": "10-knowledge/10-ecommerce-seo/faceted-navigation.md"}, {"id": "10-knowledge/10-ecommerce-seo/product-schema", "title": "Product Schema", "path": "10-knowledge/10-ecommerce-seo/product-schema.md"}, {"id": "10-knowledge/10-ecommerce-seo/feed-optimisation", "title": "Feed Optimisation", "path": "10-knowledge/10-ecommerce-seo/feed-optimisation.md"}, {"id": "10-knowledge/10-ecommerce-seo/seasonality", "title": "Seasonality", "path": "10-knowledge/10-ecommerce-seo/seasonality.md"}, {"id": "10-knowledge/10-ecommerce-seo/merchandising-and-seo", "title": "Merchandising and SEO", "path": "10-knowledge/10-ecommerce-seo/merchandising-and-seo.md"}]}, {"n": 10, "name": "International", "home": "10-knowledge/11-international-seo", "nodes": [{"id": "10-knowledge/11-international-seo/international-strategy", "title": "International Strategy", "path": "10-knowledge/11-international-seo/international-strategy.md"}, {"id": "10-knowledge/11-international-seo/cctld-vs-subfolder", "title": "ccTLD vs Subfolder", "path": "10-knowledge/11-international-seo/cctld-vs-subfolder.md"}, {"id": "10-knowledge/11-international-seo/hreflang", "title": "Hreflang", "path": "10-knowledge/11-international-seo/hreflang.md"}, {"id": "10-knowledge/11-international-seo/content-localisation", "title": "Content Localisation", "path": "10-knowledge/11-international-seo/content-localisation.md"}, {"id": "10-knowledge/11-international-seo/currency-and-market-signals", "title": "Currency and Market Signals", "path": "10-knowledge/11-international-seo/currency-and-market-signals.md"}, {"id": "10-knowledge/11-international-seo/international-crawl-management", "title": "International Crawl Management", "path": "10-knowledge/11-international-seo/international-crawl-management.md"}]}, {"n": 11, "name": "Enterprise", "home": "10-knowledge/12-enterprise-seo", "nodes": [{"id": "10-knowledge/12-enterprise-seo/enterprise-constraints", "title": "Enterprise Constraints", "path": "10-knowledge/12-enterprise-seo/enterprise-constraints.md"}, {"id": "10-knowledge/12-enterprise-seo/stakeholder-management", "title": "Stakeholder Management", "path": "10-knowledge/12-enterprise-seo/stakeholder-management.md"}, {"id": "10-knowledge/12-enterprise-seo/prioritisation-frameworks", "title": "Prioritisation Frameworks", "path": "10-knowledge/12-enterprise-seo/prioritisation-frameworks.md"}, {"id": "10-knowledge/12-enterprise-seo/seo-in-the-dev-cycle", "title": "SEO in the Dev Cycle", "path": "10-knowledge/12-enterprise-seo/seo-in-the-dev-cycle.md"}, {"id": "10-knowledge/12-enterprise-seo/platform-migrations", "title": "Platform Migrations", "path": "10-knowledge/12-enterprise-seo/platform-migrations.md"}, {"id": "10-knowledge/12-enterprise-seo/governance-at-scale", "title": "Governance at Scale", "path": "10-knowledge/12-enterprise-seo/governance-at-scale.md"}, {"id": "10-knowledge/12-enterprise-seo/automation-and-internal-tooling", "title": "Automation and Internal Tooling", "path": "10-knowledge/12-enterprise-seo/automation-and-internal-tooling.md"}]}, {"n": 12, "name": "Measurement", "home": "10-knowledge/16-measurement", "nodes": [{"id": "10-knowledge/16-measurement/measurement-fundamentals", "title": "Measurement Fundamentals", "path": "10-knowledge/16-measurement/measurement-fundamentals.md"}, {"id": "10-knowledge/15-platforms/search-console", "title": "Search Console", "path": "10-knowledge/15-platforms/search-console.md"}, {"id": "10-knowledge/15-platforms/ga4", "title": "GA4", "path": "10-knowledge/15-platforms/ga4.md"}, {"id": "10-knowledge/15-platforms/tag-manager", "title": "Tag Manager", "path": "10-knowledge/15-platforms/tag-manager.md"}, {"id": "10-knowledge/15-platforms/looker-studio", "title": "Looker Studio", "path": "10-knowledge/15-platforms/looker-studio.md"}, {"id": "10-knowledge/16-measurement/kpi-design", "title": "KPI Design", "path": "10-knowledge/16-measurement/kpi-design.md"}, {"id": "10-knowledge/16-measurement/forecasting", "title": "Forecasting", "path": "10-knowledge/16-measurement/forecasting.md"}, {"id": "10-knowledge/16-measurement/attribution", "title": "Attribution", "path": "10-knowledge/16-measurement/attribution.md"}, {"id": "10-knowledge/16-measurement/client-reporting", "title": "Client Reporting", "path": "10-knowledge/16-measurement/client-reporting.md"}]}, {"n": 13, "name": "Commercial craft", "home": "20-operations/internal-ops", "nodes": [{"id": "20-operations/internal-ops/positioning-and-niche", "title": "Positioning and Niche", "path": "20-operations/internal-ops/positioning-and-niche.md"}, {"id": "20-operations/internal-ops/lead-generation", "title": "Lead Generation", "path": "20-operations/internal-ops/lead-generation.md"}, {"id": "20-operations/internal-ops/discovery-calls", "title": "Discovery Calls", "path": "20-operations/internal-ops/discovery-calls.md"}, {"id": "20-operations/internal-ops/proposals-and-pricing", "title": "Proposals and Pricing", "path": "20-operations/internal-ops/proposals-and-pricing.md"}, {"id": "20-operations/internal-ops/onboarding", "title": "Onboarding", "path": "20-operations/internal-ops/onboarding.md"}, {"id": "20-operations/internal-ops/client-communication", "title": "Client Communication", "path": "20-operations/internal-ops/client-communication.md"}, {"id": "20-operations/internal-ops/objection-handling", "title": "Objection Handling", "path": "20-operations/internal-ops/objection-handling.md"}, {"id": "20-operations/internal-ops/retention-and-upsell", "title": "Retention and Upsell", "path": "20-operations/internal-ops/retention-and-upsell.md"}, {"id": "20-operations/internal-ops/case-studies", "title": "Case Studies", "path": "20-operations/internal-ops/case-studies.md"}]}], "bridges": [{"pair": "Internal Linking ↔ Crawl Budget ↔ Topical Authority", "why": "One tactic serving three different goals"}, {"pair": "Entities ↔ Keyword Research", "why": "Modern research is entity-first, not string-first"}, {"pair": "Structured Data ↔ AI Search ↔ Local SEO", "why": "Schema is the shared substrate"}, {"pair": "Search Intent ↔ Content Strategy ↔ Reporting KPIs", "why": "Intent decides what success even means"}, {"pair": "Architecture ↔ Faceted Navigation ↔ Enterprise Governance", "why": "The same problem at three scales"}, {"pair": "Every chain ↔ Business playbooks", "why": "Where general theory becomes an industry plan"}, {"pair": "Every concept ↔ Operations", "why": "A concept with no SOP is not yet operational"}], "playbooks": [{"name": "Law firms", "slug": "law-firms", "note": "High value per case, trust-driven, heavily regulated advertising rules"}, {"name": "Dentists", "slug": "dentists", "note": "Local pack decides everything; reviews and treatment pages carry the revenue"}, {"name": "Healthcare", "slug": "healthcare", "note": "E-E-A-T is not optional; author credentials and review process are ranking infrastructure"}, {"name": "SaaS", "slug": "saas", "note": "Topical authority plus product-led content; long sales cycles blur attribution"}, {"name": "E-commerce", "slug": "ecommerce", "note": "Architecture, faceted navigation, feeds and seasonality outrank content strategy"}, {"name": "Real estate", "slug": "real-estate", "note": "Inventory churn and programmatic pages against portal dominance"}, {"name": "Education", "slug": "education", "note": "Long consideration cycles, intake seasonality, credential-led trust signals"}, {"name": "Restaurants", "slug": "restaurants", "note": "Near-zero research phase; profile completeness and photos beat blogs"}, {"name": "Travel", "slug": "travel", "note": "Extreme seasonality, aggregator competition, itinerary and destination clusters"}, {"name": "Local businesses", "slug": "local-businesses", "note": "Proximity, categories and citation consistency over content volume"}], "playbookSections": ["Market and business model", "Search behaviour", "SEO strategy", "Keyword landscape", "Entities", "Topical map", "Content strategy", "Local SEO considerations", "AEO / GEO opportunities", "KPIs", "Client objections", "Vertical-tuned deliverables"], "formats": [{"name": "Long-form YouTube script", "job": "Depth, evergreen search traffic, authority"}, {"name": "Short YouTube script", "job": "One idea, one payoff, under 60 seconds"}, {"name": "Reel series", "job": "Three to five reels from one concept, each with its own hook"}, {"name": "Carousel", "job": "Instagram and LinkedIn; the diagram does the work"}, {"name": "LinkedIn post", "job": "Practitioner credibility, client-facing proof"}, {"name": "Blog article", "job": "The searchable home of the concept"}, {"name": "Newsletter", "job": "Direct audience, no algorithm between you and them"}, {"name": "Course notes", "job": "Student-facing, sequential, assessable"}, {"name": "Teaching notes", "job": "My delivery notes: the analogies, the questions to ask, the timing"}, {"name": "Voice-over script", "job": "Written to be spoken, not read"}, {"name": "Product-ready documentation", "job": "Reference form; the version a client or team member uses"}], "deliverables": ["Proposal", "Discovery questionnaire", "Audit report", "Keyword research", "Technical audit", "Content strategy", "Monthly report", "Client presentation", "Email templates", "Meeting notes", "SOPs", "Checklists"], "simulations": [{"name": "Mock job postings", "note": "Reverse-engineer a real job ad into a skills gap list, then close one gap"}, {"name": "Client onboarding simulations", "note": "Full onboarding against a fictional client with a hidden constraint"}, {"name": "Discovery calls", "note": "Practise the questions that reveal the unstated real goal"}, {"name": "Practice websites", "note": "Real sites, audited as if paid for"}, {"name": "Technical audits", "note": "Same SOP, same checklist, same deliverable as client work"}, {"name": "SEO reports", "note": "Report on a site you do not control, with honest attribution"}, {"name": "Client objections", "note": "Rehearse the answer to “why is this taking so long” before hearing it live"}, {"name": "Reporting exercises", "note": "Turn raw data into one page an owner will actually read"}, {"name": "Portfolio projects", "note": "Self-directed work, always labelled as such"}, {"name": "Review checklists", "note": "Score your own work the way a senior strategist would"}], "weekly": ["Read the week's daily entries", "Promote statuses: seed to growing to evergreen", "Every new note has prerequisites, related and next filled in", "Every link is reciprocated on the other end", "Every new note is reachable from a folder README", "No orphan files, no placeholders left in committed files", "Client work moved toward portfolio graduation", "Next week's learning focus chosen", "One asset picked to publish", "CHANGELOG updated if the system changed"], "monthly": ["Capability audit with file-path evidence", "Knowledge gap count per domain chain", "Radar graduation: entries true for 60+ days and applied", "Deprecation sweep: what is no longer true", "Template and SOP version bumps", "Portfolio review: is it strong enough for the work I want", "Business review: leads, proposals, retainers, effective rate", "Repeated mistakes: which process changes, not which resolve"], "harvest": [{"stage": "Daily journal", "path": "60-journal/daily/YYYY-MM-DD.md", "note": "Raw capture of what happened"}, {"stage": "Concept note", "path": "10-knowledge/", "note": "Created or updated, connections declared"}, {"stage": "Operations", "path": "20-operations/", "note": "If it changed how I work: SOP or checklist"}, {"stage": "Asset set", "path": "50-content-engine/", "note": "Stub created if the concept is evergreen"}, {"stage": "Library", "path": "80-library/", "note": "Any prompt, tool insight or framework produced"}, {"stage": "Mistakes", "path": "60-journal/mistakes/", "note": "If something went wrong, with a systemic fix"}], "frontmatter": [{"field": "id", "value": "Permanent, kebab-case, domain prefix", "note": "Never changes. Titles may change, ids never"}, {"field": "title", "value": "Human title, Title Case", "note": ""}, {"field": "type", "value": "concept, sop, checklist, template, playbook…", "note": "21 allowed values"}, {"field": "status", "value": "seed, growing, evergreen, deprecated", "note": "Promotion is deliberate, reviewed weekly"}, {"field": "version", "value": "MAJOR.MINOR", "note": "Required on templates, SOPs, checklists, deliverables"}, {"field": "created", "value": "ISO 8601", "note": "Never changes"}, {"field": "updated", "value": "ISO 8601", "note": "Bumped on every meaningful edit"}, {"field": "tags", "value": "2–5, from the controlled vocabulary", "note": "New tag means updating the taxonomy in the same commit"}, {"field": "prerequisites", "value": "ids — what to understand first", "note": "The up direction"}, {"field": "related", "value": "ids — sideways connections", "note": "Must be reciprocated on the other end"}, {"field": "next", "value": "ids — what this unlocks", "note": "The forward direction"}, {"field": "sources", "value": "URLs or citations", "note": "Omit if empty rather than carrying an empty list"}], "statuses": [{"status": "seed", "meaning": "Captured, incomplete, may be wrong", "bar": "Fine to be rough. Must still have frontmatter"}, {"status": "growing", "meaning": "Being developed and tested in real work", "bar": "Definition and mechanics are correct"}, {"status": "evergreen", "meaning": "I can teach it and defend it to a client", "bar": "Complete, linked, no known gaps"}, {"status": "deprecated", "meaning": "No longer true or no longer used", "bar": "States why, links to what replaced it, moves to archive"}], "rules": ["One canonical location per asset. Never duplicate, always link.", "Links are declared on both ends, or the map has one-way streets.", "Filenames are kebab-case.md, no dates — except journal and radar, named YYYY-MM-DD.md.", "Every folder has a README.md acting as its hub and index.", "No file is created from scratch. Copy from the template library.", "Nothing is deleted. It is deprecated and archived, with a reason.", "No client-confidential data outside 30-clients. Redact before the portfolio.", "Client documents record the template version that produced them."], "templates": [{"file": "business-playbook.md", "path": "00-meta/templates/business-playbook.md", "title": "{{Industry}} SEO Playbook", "type": "playbook", "version": "1.0", "lines": 147, "body": "---\nid: playbook-{{INDUSTRY-SLUG}}\ntitle: {{Industry}} SEO Playbook\ntype: playbook\nstatus: seed\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{industry-tag}}, strategy]\nrelated: []\n---\n\n# {{Industry}} SEO Playbook\n\n> {{One line: what wins in this industry that does not win elsewhere.}}\n\n<!-- A playbook is not a summary of general SEO applied to a vertical. It is the set of decisions that are DIFFERENT for this vertical. If a section could be copied into another playbook unchanged, delete it and link to the general concept instead. -->\n\n**Maturity of this playbook:** {{theory / tested on 1 client / tested on 3+ clients}}\n\n---\n\n## 1. Market and business model\n\n- **How the business makes money:** {{ }}\n- **Average customer value:** {{ }}\n- **Sales cycle:** {{ }}\n- **What a \"conversion\" actually is:** {{form / call / booking / footfall}}\n- **Who the decision maker is when pitching:** {{owner / marketing manager / practice manager}}\n- **Regulatory or compliance constraints:** {{ }}\n\n## 2. Search behaviour\n\n- **How this audience searches:** {{ }}\n- **Dominant intent mix:** {{informational / commercial / transactional / navigational — with rough proportions}}\n- **Device and location patterns:** {{ }}\n- **Urgency profile:** {{emergency-driven, research-heavy, seasonal}}\n- **SERP features that dominate:** {{local pack, AI Overviews, PAA, reviews, shopping}}\n- **What the searcher is afraid of:** {{the objection that decides the click}}\n\n## 3. SEO strategy\n\n- **Primary growth lever:** {{local visibility / topical authority / product feed / digital PR}}\n- **Where the leverage is NOT:** {{ }}\n- **Site architecture pattern:** {{service pages × locations, programmatic, editorial hub}}\n- **Realistic timeline to results:** {{ }}\n- **Competitive difficulty:** {{ }}\n\n## 4. Keyword landscape\n\n| Cluster | Example queries | Intent | Priority |\n|---|---|---|---|\n| {{Core service}} | {{ }} | Transactional | High |\n| {{Service + location}} | {{ }} | Transactional | High |\n| {{Cost / pricing}} | {{ }} | Commercial | High |\n| {{Comparison}} | {{ }} | Commercial | Medium |\n| {{Problem / symptom}} | {{ }} | Informational | Medium |\n| {{Trust / credentials}} | {{ }} | Navigational | Low |\n\n**Modifier patterns that convert in this vertical:** {{near me, emergency, best, cost, reviews, \"for\" X}}\n\n## 5. Entities\n\n- **Core entities:** {{services, conditions, products, regulations, professional bodies}}\n- **Entities that establish credibility:** {{certifications, associations, named practitioners, accreditations}}\n- **Entity relationships worth making explicit:** {{ }}\n- **Knowledge panel considerations:** {{ }}\n\n## 6. Topical map\n\n```\n{{Pillar 1}}\n ├── {{Cluster}}\n │    ├── {{Supporting page}}\n │    └── {{Supporting page}}\n └── {{Cluster}}\n\n{{Pillar 2}}\n └── {{Cluster}}\n```\n\n**Internal linking rule for this vertical:** {{where links must point to move revenue}}\n\n## 7. Content strategy\n\n| Content type | Purpose | Format | Frequency |\n|---|---|---|---|\n| {{ }} | {{ }} | {{ }} | {{ }} |\n\n- **E-E-A-T requirements:** {{author credentials, review process, citations — non-negotiable in regulated verticals}}\n- **What content NOT to produce:** {{the standard advice that wastes budget here}}\n- **Conversion elements every page needs:** {{ }}\n\n## 8. Local SEO considerations\n\n- **Local relevance:** {{critical / partial / none}}\n- **Google Business Profile priorities:** {{categories, services, attributes, posts}}\n- **Multi-location handling:** {{ }}\n- **Citations and directories that matter here:** {{vertical-specific directories}}\n- **Reviews:** {{platforms that influence decisions, volume expectations, response policy}}\n\n## 9. AEO / GEO opportunities\n\n- **Questions this audience asks AI assistants:** {{ }}\n- **Answer-ready content formats:** {{ }}\n- **Structured data priorities:** {{schema types, in order}}\n- **Citation sources AI engines trust in this vertical:** {{ }}\n- **Where to be mentioned besides my own site:** {{directories, forums, publications, comparison sites}}\n- **How I measure LLM visibility here:** {{ }}\n\n## 10. KPIs\n\n| KPI | Why it matters here | Realistic benchmark | Reporting cadence |\n|---|---|---|---|\n| {{ }} | {{ }} | {{ }} | Monthly |\n\n- **Vanity metrics to avoid reporting:** {{ }}\n- **The one number the client actually cares about:** {{ }}\n\n## 11. Common client objections\n\n| Objection | My answer |\n|---|---|\n| {{ }} | {{ }} |\n\n## 12. Deliverables tuned for this vertical\n\n{{Which templates in 20-operations/client-deliverables/ need vertical-specific variants, and what changes.}}\n\n## Connections\n\n- **Concepts:** {{ }}\n- **SOPs:** {{ }}\n- **Case studies:** {{ }}\n- **Related playbooks:** {{ }}\n\n## Evidence log\n\n<!-- What I have actually observed, not what I read. This is the section that makes a playbook worth money. -->\n\n| Date | Client / test | Observation |\n|---|---|---|\n| {{ }} | {{ }} | {{ }} |\n\n## Changelog\n\n- {{YYYY-MM-DD}} — v1.0 created\n"}, {"file": "case-study.md", "path": "00-meta/templates/case-study.md", "title": "Case Study — {{Outcome-led title}}", "type": "case-study", "version": "1.0", "lines": 73, "body": "---\nid: case-{{SLUG}}\ntitle: Case Study — {{Outcome-led title}}\ntype: case-study\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [portfolio, {{industry-tag}}, {{domain-tag}}]\nrelated: []\n---\n\n# {{Outcome-led title, e.g. \"Recovering 62% of lost organic traffic after a botched migration\"}}\n\n<!-- Redaction check before committing:\n[ ] Written client permission on file? If no → anonymise (use the label from the client workspace README)\n[ ] Absolute revenue converted to percentages unless permission granted\n[ ] No unlaunched URLs, no internal screenshots with staff names, no credentials\n[ ] Client-identifying details in screenshots blurred\n-->\n\n**Client:** {{Name, or \"B2B SaaS company, ~40 staff\"}}\n**Industry:** {{ }} · **Engagement:** {{3-month project / ongoing retainer}} · **My role:** {{ }}\n**Type:** {{client work / self-directed project — never blur this line}}\n\n## The situation\n\n{{Where the business was and what was at stake. Two short paragraphs, no jargon.}}\n\n## The problem\n\n{{The diagnosis, and critically — how I diagnosed it. The method is the proof of skill, more than the result.}}\n\n## Constraints\n\n{{Budget, dev capacity, timeline, politics. Results without constraints read as luck.}}\n\n## What I did\n\n### 1. {{Phase}}\n\n- **Action:** {{ }}\n- **Why this and not the obvious alternative:** {{ }}\n- **Deliverable produced:** {{link to the sanitised sample in 40-portfolio/samples/}}\n\n## Results\n\n| Metric | Before | After | Change | Period |\n|---|---|---|---|---|\n| {{ }} | {{ }} | {{ }} | {{+X%}} | {{ }} |\n\n**Attribution honesty:** {{what else was happening — a seasonal peak, a paid campaign, an algorithm update. Stating this makes every other number credible.}}\n\n## What I would do differently\n\n{{The section interviewers and prospects remember. Link to the mistake journal entries.}}\n\n## Skills demonstrated\n\n{{Tagged list mapping to concepts in 10-knowledge/ — so this case study proves specific competencies, not vague \"SEO experience\".}}\n\n## Assets\n\n- One-page version: {{link}}\n- Slide version: {{link}}\n- Sanitised deliverables: {{links}}\n\n## Connections\n\n- **Client workspace (private):** {{link}}\n- **Concepts applied:** {{ }}\n- **SOPs used:** {{ }}\n- **Playbook:** {{ }}\n"}, {"file": "checklist.md", "path": "00-meta/templates/checklist.md", "title": "Checklist — {{Name}}", "type": "checklist", "version": "1.0", "lines": 37, "body": "---\nid: chk-{{SLUG}}\ntitle: Checklist — {{Name}}\ntype: checklist\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{function-tag}}, checklist]\nrelated: []\n---\n\n# Checklist — {{Name}}\n\n**Version {{1.0}}** · Used with SOP: {{link}} · Scope: {{what this covers}}\n\n<!-- Rules: every item is binary. No prose, no \"consider\". If an item needs explaining, explain it in the SOP and link there. Copy this file into the client folder and tick it there; keep the master blank. -->\n\n## {{Section 1}}\n\n- [ ] {{Verifiable item}}\n- [ ] {{Verifiable item}}\n\n## {{Section 2}}\n\n- [ ] {{Verifiable item}}\n\n## Sign-off\n\n- Run by: {{ }}\n- Date: {{YYYY-MM-DD}}\n- Items failed: {{ }}\n- Follow-up actions logged in: {{link}}\n\n## Changelog\n\n- {{YYYY-MM-DD}} — v1.0 created\n"}, {"file": "client-deliverable.md", "path": "00-meta/templates/client-deliverable.md", "title": "Deliverable Template — {{Document Name}}", "type": "deliverable", "version": "1.0", "lines": 75, "body": "---\nid: deliv-{{SLUG}}\ntitle: Deliverable Template — {{Document Name}}\ntype: deliverable\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{function-tag}}, template]\nrelated: []\n---\n\n<!-- ===== INTERNAL BLOCK — DELETE EVERYTHING IN THIS COMMENT BEFORE SENDING ===== \n\nPurpose: {{what this document achieves commercially}}\nSent at: {{point in the engagement}}\nAudience: {{owner / marketing manager / CMO — decides reading level}}\nProduced by SOP: {{link}}\nTime to produce: {{ }}\nPricing note: {{if this is a paid deliverable, what it is worth}}\n\nFill rules:\n- Every {{PLACEHOLDER}} replaced. Search for \"{{\" before sending.\n- No internal jargon. If a term must appear, define it inline.\n- Every recommendation has an owner, an effort estimate, and an expected impact.\n- Record below which template version produced the sent document.\n\n===== END INTERNAL BLOCK ===== -->\n\n# {{Document Name}}\n\n**Prepared for:** {{Client Name}}\n**Prepared by:** {{My Name}}\n**Date:** {{YYYY-MM-DD}}\n**Template version:** {{1.0}}\n\n---\n\n## Executive summary\n\n{{Three to five sentences. What we found, what it means commercially, what happens next. Written so it can be forwarded to someone who reads nothing else.}}\n\n## Objectives\n\n{{What this document is answering, tied to the client's stated business goal.}}\n\n## Findings\n\n### {{Finding 1 — written as a business statement, not a technical one}}\n\n- **What we found:** {{ }}\n- **Why it matters:** {{commercial consequence, quantified if possible}}\n- **Evidence:** {{screenshot, data, link}}\n\n## Recommendations\n\n| # | Recommendation | Impact | Effort | Owner | Priority |\n|---|---|---|---|---|---|\n| 1 | {{ }} | High | Low | {{Dev / Content / Me}} | P1 |\n\n## Next steps\n\n| Action | Owner | Due |\n|---|---|---|\n| {{ }} | {{ }} | {{YYYY-MM-DD}} |\n\n## Appendix\n\n{{Raw data, methodology, tool outputs. Everything the technical reader wants and the executive reader skips.}}\n\n---\n\n<!-- INTERNAL: log the instantiation\nSent to: {{client}} on {{date}} · Template v{{X.Y}} · Copy stored at 30-clients/{{client}}/...\n-->\n"}, {"file": "client-workspace-readme.md", "path": "00-meta/templates/client-workspace-readme.md", "title": "{{Client Name}} — Workspace", "type": "hub", "version": "1.0", "lines": 73, "body": "---\nid: client-{{CLIENT-SLUG}}-index\ntitle: {{Client Name}} — Workspace\ntype: hub\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [client-management, {{industry-tag}}]\nowner: {{client-slug}}\nrelated: []\n---\n\n# {{Client Name}} — Workspace\n\n**Status:** {{prospect / active / paused / closed}}\n**Engagement start:** {{YYYY-MM-DD}}\n**Industry:** {{ }} → playbook: {{link to 15-business-playbooks/...}}\n**Anonymised label for public use:** {{\"Client A — B2B SaaS, 40 staff\"}}\n\n## The business in three lines\n\n{{What they sell, to whom, and how they make money. If I cannot write this, I am not ready to do SEO for them.}}\n\n## Commercial\n\n- **Scope:** {{ }}\n- **Retainer / project value:** {{ }}\n- **Contract dates:** {{ }}\n- **Primary contact:** {{name, role, preferred channel}}\n- **Reporting day:** {{ }}\n\n## Goals and KPIs\n\n| Business goal | SEO KPI | Baseline | Target | Deadline |\n|---|---|---|---|---|\n| {{ }} | {{ }} | {{ }} | {{ }} | {{ }} |\n\n## Access and accounts\n\n<!-- Never store credentials in this repository. Record only WHERE access lives and WHO granted it. -->\n\n| System | Access status | Held in | Granted by |\n|---|---|---|---|\n| Search Console | ✅ | {{password manager}} | {{ }} |\n\n## Constraints\n\n{{Dev capacity, CMS limitations, legal review, brand rules, internal politics. The things that decide what is actually possible.}}\n\n## Folder map\n\n| Folder | Contents |\n|---|---|\n| `01-proposal/` | Proposal, scope, signed agreement notes |\n| `02-discovery/` | Questionnaire, kickoff notes, access audit |\n| `03-audits/` | Technical audit, content audit, backlink audit |\n| `04-strategy/` | Keyword research, topical map, content strategy, roadmap |\n| `05-deliverables/` | Everything sent, dated, with template versions |\n| `06-reporting/` | Monthly reports, dashboards, presentations |\n| `07-meetings/` | Call notes and decisions |\n| `08-work-log/` | What was done, when, by whom |\n| `assets/` | Screenshots, exports, crawl files |\n\n## Decision log\n\n| Date | Decision | Made by | Rationale |\n|---|---|---|---|\n| {{ }} | {{ }} | {{ }} | {{ }} |\n\n## Lessons for the repository\n\n{{What this engagement taught me. Link to concepts updated, SOPs improved, mistakes logged, playbook evidence added. This is how client work compounds instead of evaporating.}}\n"}, {"file": "concept.md", "path": "00-meta/templates/concept.md", "title": "{{Concept Title}}", "type": "concept", "version": "1.0", "lines": 70, "body": "---\nid: {{PREFIX}}-{{SLUG}}\ntitle: {{Concept Title}}\ntype: concept\nstatus: seed\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{domain-tag}}, {{sub-topic-tag}}]\nprerequisites: []\nrelated: []\nnext: []\nsources: []\n---\n\n# {{Concept Title}}\n\n> {{One-sentence definition, plain enough to say out loud to a client who has never heard the term.}}\n\n<!-- If you cannot write the definition in one sentence without jargon, you do not understand it yet. Mark status: seed and come back. -->\n\n## Why it matters\n\n{{Business impact. Money, risk, or time. Not \"it is a Google ranking factor\" — what happens to the client if this is wrong.}}\n\n## How it works\n\n{{The mechanics. Use tables, examples, or a diagram. Include the exact signals, headers, files, or thresholds involved.}}\n\n## How I apply it\n\n{{My own method. Which tool, which report, which setting, in what order. This section is what makes this note mine rather than a copy of a blog post.}}\n\n- **Tools I use:** {{link to tool profiles in 80-library}}\n- **SOP:** {{link to the SOP in 20-operations, if one exists}}\n- **Checklist:** {{link, if one exists}}\n\n## Common mistakes\n\n| Mistake | Why it happens | What to do instead |\n|---|---|---|\n| {{ }} | {{ }} | {{ }} |\n\n<!-- Link any mistake you personally made to its entry in 60-journal/mistakes/ -->\n\n## Industry notes\n\n{{Optional. Where this behaves differently by vertical — link to the relevant playbooks in 15-business-playbooks/.}}\n\n## Connections\n\n- **Prerequisites:** {{[Concept](../path.md)}}\n- **Related:** {{[Concept](../path.md)}}\n- **Next:** {{[Concept](../path.md)}}\n- **Used in:** {{SOPs, playbooks, deliverables that depend on this}}\n- **Chain:** {{which chain in 00-meta/KNOWLEDGE-MAP.md this sits on, and its position}}\n\n<!-- Reciprocity rule: after filling this in, add this note's id to the frontmatter of every note you linked. -->\n\n## Open questions\n\n{{What I still do not know. This is the most valuable section in a seed note.}}\n\n## Sources\n\n- {{URL — accessed YYYY-MM-DD}}\n\n## Changelog\n\n- {{YYYY-MM-DD}} — v1.0 created\n"}, {"file": "content-asset-set.md", "path": "00-meta/templates/content-asset-set.md", "title": "Content Asset Set — {{Concept}}", "type": "content-asset", "version": "1.0", "lines": 54, "body": "---\nid: asset-{{CONCEPT-SLUG}}\ntitle: Content Asset Set — {{Concept}}\ntype: content-asset\nstatus: seed\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [teaching, {{domain-tag}}]\nrelated: [{{source concept id}}]\n---\n\n# Content Asset Set — {{Concept}}\n\n**Source note:** {{link to the concept in 10-knowledge/}}\n**Core message (one sentence, every asset must agree with it):** {{ }}\n**Audience:** {{beginners / practitioners / business owners}}\n**Hook / angle:** {{the reason someone stops scrolling}}\n\n<!-- Rule: all eleven assets derive from ONE source concept note. If the concept note changes materially, every asset here is marked stale and reviewed. Never write an asset from memory. -->\n\n## Production status\n\n| # | Asset | File | Status |\n|---|---|---|---|\n| 1 | Long-form YouTube script | `01-youtube-long.md` | ⬜ |\n| 2 | Short YouTube script (Shorts) | `02-youtube-short.md` | ⬜ |\n| 3 | Reel series (3–5 reels) | `03-reel-series.md` | ⬜ |\n| 4 | Instagram / LinkedIn carousel | `04-carousel.md` | ⬜ |\n| 5 | LinkedIn post | `05-linkedin-post.md` | ⬜ |\n| 6 | Blog article | `06-blog-article.md` | ⬜ |\n| 7 | Newsletter issue | `07-newsletter.md` | ⬜ |\n| 8 | Course notes (student-facing) | `08-course-notes.md` | ⬜ |\n| 9 | Teaching notes (my delivery notes) | `09-teaching-notes.md` | ⬜ |\n| 10 | Voice-over script | `10-voice-over.md` | ⬜ |\n| 11 | Product-ready documentation | `11-documentation.md` | ⬜ |\n\nStatus key: ⬜ not started · 🟡 drafted · 🟢 published · 🔁 needs update (source concept changed)\n\n## Shared assets\n\n- **Visuals needed:** {{diagram, screenshot, before/after}}\n- **Examples used:** {{keep consistent across all formats — the same example told eleven ways builds recognition}}\n- **Call to action:** {{ }}\n\n## Distribution log\n\n| Asset | Platform | Published | Performance | Note |\n|---|---|---|---|---|\n| {{ }} | {{ }} | {{YYYY-MM-DD}} | {{ }} | {{ }} |\n\n## Repurposing notes\n\n{{What worked, what flopped, which hook performed. This feeds the next asset set — the content engine gets better only if this section is honest.}}\n"}, {"file": "daily-journal.md", "path": "00-meta/templates/daily-journal.md", "title": "Learning Journal — {{YYYY-MM-DD}}", "type": "journal", "version": "1.0", "lines": 48, "body": "---\nid: jrnl-{{YYYY-MM-DD}}\ntitle: Learning Journal — {{YYYY-MM-DD}}\ntype: journal\nstatus: evergreen\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [lesson]\nrelated: []\n---\n\n# {{YYYY-MM-DD}}\n\n**Focus:** {{what I set out to learn or do}}\n**Time spent:** {{ }}\n**Energy / conditions:** {{optional, but useful for spotting patterns in what actually works}}\n\n## What I learned\n\n{{Raw, in my own words, before it is polished into a concept note. Do not self-edit here.}}\n\n## What I did\n\n{{Client work, practice, reading, watching.}}\n\n## Questions I could not answer\n\n{{ }}\n\n## Repository updates\n\n<!-- Non-negotiable. If this table is empty, the day produced nothing permanent. -->\n\n| File | Action |\n|---|---|\n| `10-knowledge/...` | created / updated |\n| `20-operations/...` | created / updated |\n| `50-content-engine/...` | stub created |\n| `60-journal/mistakes/...` | logged |\n\n## Reusable asset produced today\n\n{{The one thing from today I can use again: a template, a prompt, a checklist item, a snippet of explanation.}}\n\n## Tomorrow\n\n{{One specific next action. Not \"study technical SEO\" — \"write the crawl budget concept note and link it to log file analysis\".}}\n"}, {"file": "framework.md", "path": "00-meta/templates/framework.md", "title": "{{Framework Name}}", "type": "framework", "version": "1.0", "lines": 47, "body": "---\nid: fw-{{SLUG}}\ntitle: {{Framework Name}}\ntype: framework\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{domain-tag}}, strategy]\nrelated: []\n---\n\n# {{Framework Name}}\n\n> {{What decision this framework makes, in one line.}}\n\n## Origin\n\n{{Mine, or borrowed. If borrowed, credit and link the source.}}\n\n## When to use it\n\n{{The decision situation. Frameworks applied outside their situation produce confident nonsense.}}\n\n## The framework\n\n| Step / Dimension | Question it answers | Output |\n|---|---|---|\n| {{ }} | {{ }} | {{ }} |\n\n## Worked example\n\n{{A real application, with real numbers. A framework without an example is a diagram.}}\n\n## Limitations\n\n{{Where it breaks down. Every framework has an edge.}}\n\n## Connections\n\n- **Concepts:** {{ }}\n- **Used in SOPs:** {{ }}\n- **Used in playbooks:** {{ }}\n\n## Changelog\n\n- {{YYYY-MM-DD}} — v1.0 created\n"}, {"file": "glossary-term.md", "path": "00-meta/templates/glossary-term.md", "title": "{{Term}}", "type": "glossary", "version": "1.0", "lines": 33, "body": "---\nid: gloss-{{SLUG}}\ntitle: {{Term}}\ntype: glossary\nstatus: evergreen\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{domain-tag}}]\nrelated: []\n---\n\n# {{Term}}\n\n**Also known as:** {{synonyms and abbreviations — this is what makes search work}}\n\n## Plain definition\n\n{{One sentence, client-safe.}}\n\n## Technical definition\n\n{{One sentence, precise.}}\n\n## Commonly confused with\n\n| Term | Difference |\n|---|---|\n| {{ }} | {{ }} |\n\n## Full concept note\n\n{{Link to 10-knowledge/. The glossary is an index, not a replacement for the concept.}}\n"}, {"file": "hub-readme.md", "path": "00-meta/templates/hub-readme.md", "title": "{{Folder Name}}", "type": "hub", "version": "1.0", "lines": 44, "body": "---\nid: {{PREFIX}}-index\ntitle: {{Folder Name}}\ntype: hub\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{domain-tag}}]\nrelated: [meta-knowledge-map]\n---\n\n# {{Folder Name}}\n\n> {{One line: what this folder covers and where its boundary is — what deliberately does NOT belong here.}}\n\n## Learning path\n\n<!-- The chain for this domain, in dependency order. Every node becomes a file. -->\n\n```\n{{Concept A}} → {{Concept B}} → {{Concept C}} → {{Concept D}}\n```\n\n## Contents\n\n| File | Status | One-line summary |\n|---|---|---|\n| [{{concept-a.md}}](./concept-a.md) | evergreen | {{ }} |\n| [{{concept-b.md}}](./concept-b.md) | seed | {{ }} |\n\n## Not yet written\n\n<!-- The curriculum. Nodes on the chain with no file yet. Reviewed monthly. -->\n\n- [ ] {{Concept}}\n- [ ] {{Concept}}\n\n## Connects to\n\n- **Upstream:** {{domain folder this depends on}}\n- **Downstream:** {{domain folder that depends on this}}\n- **Operations:** {{SOPs and checklists in 20-operations/ that execute this domain}}\n- **Playbooks:** {{industries in 15-business-playbooks/ where this domain is decisive}}\n"}, {"file": "meeting-notes.md", "path": "00-meta/templates/meeting-notes.md", "title": "{{Client}} — {{Meeting Type}} — {{YYYY-MM-DD}}", "type": "client-doc", "version": "1.0", "lines": 53, "body": "---\nid: client-{{CLIENT-SLUG}}-meeting-{{YYYY-MM-DD}}\ntitle: {{Client}} — {{Meeting Type}} — {{YYYY-MM-DD}}\ntype: client-doc\nstatus: evergreen\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [client-management, {{discovery / reporting}}]\nowner: {{client-slug}}\n---\n\n# {{Meeting Type}} — {{Client}} — {{YYYY-MM-DD}}\n\n**Attendees:** {{ }}\n**Duration:** {{ }}\n**Purpose:** {{ }}\n\n## What they said (their words)\n\n{{Capture actual phrasing, especially about problems and goals. Their language becomes my proposal language and often my keyword research.}}\n\n## Decisions made\n\n| Decision | Owner |\n|---|---|\n| {{ }} | {{ }} |\n\n## Action items\n\n| Action | Owner | Due |\n|---|---|---|\n| {{ }} | {{ }} | {{YYYY-MM-DD}} |\n\n## Objections raised\n\n| Objection | How I answered | Did it land? |\n|---|---|---|\n| {{ }} | {{ }} | {{ }} |\n\n<!-- Every objection worth remembering goes into 20-operations/client-deliverables/ objection library and the relevant playbook. -->\n\n## Risks and red flags\n\n{{ }}\n\n## Follow-up email sent\n\n{{link or paste}}\n\n## My performance notes\n\n{{What I handled well, what I fumbled. Fumbles become mistake journal entries.}}\n"}, {"file": "mistake-entry.md", "path": "00-meta/templates/mistake-entry.md", "title": "Mistake — {{Short description}}", "type": "journal", "version": "1.0", "lines": 59, "body": "---\nid: mist-{{SLUG}}\ntitle: Mistake — {{Short description}}\ntype: journal\nstatus: evergreen\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [mistake, {{domain-tag}}]\nrelated: []\n---\n\n# Mistake — {{Short description}}\n\n**Date:** {{YYYY-MM-DD}} · **Context:** {{client work / practice / study}} · **Severity:** {{low / medium / high}}\n**Cost:** {{time, money, credibility, or a client}}\n\n<!-- This journal is the highest-value folder in the repository. Write entries honestly and without self-punishment: the goal is a system that prevents repetition, not a record of guilt. -->\n\n## What happened\n\n{{Factual. No hedging.}}\n\n## What I believed at the time\n\n{{The faulty assumption. This is the actual root cause — not the action, the belief behind it.}}\n\n## What was actually true\n\n{{ }}\n\n## How I found out\n\n{{ }}\n\n## Impact\n\n{{ }}\n\n## Root cause\n\n{{Knowledge gap / process gap / rushing / miscommunication / tool trust / unverified assumption.}}\n\n## The fix\n\n- **Immediate:** {{what I did to repair it}}\n- **Systemic:** {{what changed in the repository so this cannot recur — a checklist item, an SOP step, a concept note}}\n\n## Repository changes made\n\n| File | Change |\n|---|---|\n| {{ }} | {{added checklist item / corrected concept / new SOP step}} |\n\n## Recurrence check\n\n- [ ] Added to a checklist so it is verified, not remembered\n- [ ] Reviewed in a monthly review\n- [ ] Has this happened before? {{link to prior entry if yes — a repeat mistake is a process failure, not a memory failure}}\n"}, {"file": "monthly-review.md", "path": "00-meta/templates/monthly-review.md", "title": "Monthly Review — {{Month YYYY}}", "type": "review", "version": "1.0", "lines": 78, "body": "---\nid: rev-m-{{YYYY-MM}}\ntitle: Monthly Review — {{Month YYYY}}\ntype: review\nstatus: evergreen\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [review]\nrelated: []\n---\n\n# Monthly Review — {{Month YYYY}}\n\n## 1. Capability audit\n\n**What I can do now that I could not last month** — with file-path evidence, not feelings.\n\n| New capability | Evidence | Proven on |\n|---|---|---|\n| {{ }} | {{path}} | {{client / simulation}} |\n\n## 2. Knowledge coverage\n\n| Domain | Nodes on chain | Files written | Gap |\n|---|---|---|---|\n| Technical SEO | {{ }} | {{ }} | {{ }} |\n| Semantic SEO | {{ }} | {{ }} | {{ }} |\n| AI Search | {{ }} | {{ }} | {{ }} |\n\n**Thinnest domain this month → next month's curriculum:** {{ }}\n\n## 3. Radar graduation\n\nEntries in `70-radar/` that have held true for 60+ days and been applied in real work:\n\n| Radar entry | Graduated to concept | Date |\n|---|---|---|\n| {{ }} | {{ }} | {{ }} |\n\n## 4. Deprecation sweep\n\n| File | Why no longer true | Moved to archive? |\n|---|---|---|\n| {{ }} | {{ }} | {{ }} |\n\n## 5. Template and SOP versioning\n\n| Template | Old → New | Reason |\n|---|---|---|\n| {{ }} | v1.2 → v2.0 | {{structure changed}} |\n\n## 6. Portfolio\n\n- Case studies added: {{ }}\n- Samples added: {{ }}\n- Is my portfolio currently strong enough to win the work I want? {{honest answer}}\n\n## 7. Business\n\n| Metric | This month | Last month |\n|---|---|---|\n| Leads | {{ }} | {{ }} |\n| Proposals sent / won | {{ }} | {{ }} |\n| Active retainers | {{ }} | {{ }} |\n| Effective hourly rate | {{ }} | {{ }} |\n| Content published | {{ }} | {{ }} |\n\n## 8. Repeated mistakes\n\n{{Any mistake logged twice this month is a system failure. What changes in the process, not in my resolve.}}\n\n## 9. Next month\n\n- **Primary objective:** {{ }}\n- **Learning theme:** {{ }}\n- **Repository milestone:** {{ }}\n- **Business milestone:** {{ }}\n"}, {"file": "portfolio-sample.md", "path": "00-meta/templates/portfolio-sample.md", "title": "Portfolio Sample — {{Deliverable Type}}", "type": "portfolio", "version": "1.0", "lines": 36, "body": "---\nid: case-sample-{{SLUG}}\ntitle: Portfolio Sample — {{Deliverable Type}}\ntype: portfolio\nstatus: evergreen\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [portfolio, {{function-tag}}]\nrelated: []\n---\n\n# Portfolio Sample — {{Deliverable Type}}\n\n**What this is:** {{e.g. a full technical audit produced for a 12,000-page e-commerce site}}\n**Context:** {{client work (anonymised) / self-directed practice project}}\n**Produced with:** {{SOP link}} · template v{{X.Y}}\n**Time to produce:** {{ }}\n\n## Why I am showing this\n\n{{The specific skill this proves. One sentence.}}\n\n## Redaction applied\n\n{{What was changed to make this public. Stating this openly builds trust rather than raising suspicion.}}\n\n## The sample\n\n{{Embed or link the sanitised deliverable.}}\n\n## What a reviewer should notice\n\n- {{The judgement call in section X}}\n- {{The prioritisation logic}}\n- {{What I chose to leave out and why}}\n"}, {"file": "prompt.md", "path": "00-meta/templates/prompt.md", "title": "Prompt — {{Task}}", "type": "prompt", "version": "1.0", "lines": 50, "body": "---\nid: prompt-{{SLUG}}\ntitle: Prompt — {{Task}}\ntype: prompt\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{function-tag}}]\nrelated: []\n---\n\n# Prompt — {{Task}}\n\n**Version {{1.0}}** · **Task:** {{what it produces}} · **Tested on:** {{models/tools}}\n**Never paste client-confidential data into a tool without checking the client's data policy first.**\n\n## When to use\n\n{{ }}\n\n## Inputs I must supply\n\n| Placeholder | What to paste |\n|---|---|\n| `{{DATA}}` | {{ }} |\n\n## The prompt\n\n```\n{{The full prompt text, with placeholders in double braces.}}\n```\n\n## Expected output shape\n\n{{ }}\n\n## Known failure modes\n\n| Failure | Fix |\n|---|---|\n| {{invents metrics}} | {{require \"cite the row\" instruction}} |\n\n## Verification step\n\n{{How I check the output before it touches a client deliverable. A prompt without a verification step is a liability.}}\n\n## Changelog\n\n- {{YYYY-MM-DD}} — v1.0 created\n"}, {"file": "radar-entry.md", "path": "00-meta/templates/radar-entry.md", "title": "{{What changed}}", "type": "radar", "version": "1.0", "lines": 55, "body": "---\nid: radar-{{YYYY-MM-DD}}-{{SLUG}}\ntitle: {{What changed}}\ntype: radar\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [news, {{algorithm-updates / ai-search / platform-tag}}]\nrelated: []\nsources: []\n---\n\n# {{What changed}}\n\n**Date observed:** {{YYYY-MM-DD}} · **Source type:** {{official announcement / documentation change / community observation / my own data}}\n**Confidence:** {{confirmed / likely / rumour}}\n**Volatility:** {{may reverse / probably permanent}}\n\n## What happened\n\n{{Factual, one paragraph.}}\n\n## What is actually confirmed vs inferred\n\n| Claim | Status |\n|---|---|\n| {{ }} | confirmed by {{source}} |\n| {{ }} | inferred / community speculation |\n\n<!-- This split is the whole point of the radar. Mixing the two is how SEOs build strategies on rumours. -->\n\n## Who this affects\n\n{{Site types, verticals, markets. Link to affected playbooks.}}\n\n## What I am changing in my work\n\n{{Concrete. \"Nothing yet, monitoring\" is a valid and often correct answer.}}\n\n## What I observed in my own data\n\n| Client / site | Metric | Change | Date range |\n|---|---|---|---|\n| {{ }} | {{ }} | {{ }} | {{ }} |\n\n## Graduation\n\n- [ ] Held true 60+ days\n- [ ] Applied in real work\n- [ ] Concept in `10-knowledge/` created or updated → {{link}}\n\n## Sources\n\n- {{URL — accessed YYYY-MM-DD}}\n"}, {"file": "simulation-brief.md", "path": "00-meta/templates/simulation-brief.md", "title": "Simulation — {{Exercise Name}}", "type": "simulation", "version": "1.0", "lines": 63, "body": "---\nid: sim-{{SLUG}}\ntitle: Simulation — {{Exercise Name}}\ntype: simulation\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [practice, {{function-tag}}]\nrelated: []\n---\n\n# Simulation — {{Exercise Name}}\n\n**Scenario type:** {{mock job posting / onboarding / discovery call / audit / reporting / objection handling}}\n**Difficulty:** {{junior / mid / senior}}\n**Time limit:** {{ }}\n**Real site used:** {{URL, or \"fictional\"}}\n\n<!-- Simulations must produce the same artifacts as paid work, judged by the same checklists. Practice that is easier than the job does not prepare you for the job. -->\n\n## The brief\n\n{{Written as a real client or employer would write it — vague, incomplete, with a hidden constraint. Do not write a brief that is easier than reality.}}\n\n## The fictional client\n\n- **Business:** {{ }}\n- **Industry / playbook:** {{link}}\n- **Budget:** {{ }}\n- **Stated goal:** {{ }}\n- **Unstated real goal:** {{the thing they actually care about — revealed only if the right question is asked}}\n- **Hidden constraint:** {{no dev resource, legal sign-off required, CEO's pet project}}\n\n## Deliverables required\n\n- [ ] {{Deliverable, from the real template in 20-operations/client-deliverables/}}\n- [ ] {{ }}\n\n## Success criteria\n\n{{How a senior strategist would judge this. Specific and harsh.}}\n\n## Review\n\n**Self-review checklist:** {{link}}\n**Time actually taken:** {{ }}\n\n| Criterion | Score /5 | Note |\n|---|---|---|\n| {{ }} | {{ }} | {{ }} |\n\n## What I got wrong\n\n{{→ mistake journal entries}}\n\n## Repository updates produced\n\n{{Concepts written, SOPs improved, templates created. A simulation that leaves no trace in the repository was entertainment, not practice.}}\n\n## Portfolio potential\n\n{{Yes/no. If yes → 40-portfolio/, clearly labelled as a self-directed project.}}\n"}, {"file": "sop.md", "path": "00-meta/templates/sop.md", "title": "SOP — {{Process Name}}", "type": "sop", "version": "1.0", "lines": 77, "body": "---\nid: sop-{{SLUG}}\ntitle: SOP — {{Process Name}}\ntype: sop\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{function-tag}}, sop]\nrelated: []\n---\n\n# SOP — {{Process Name}}\n\n**Version {{1.0}}** · Estimated time: {{ }} · Runs: {{per engagement / monthly / ad hoc}}\n\n## Purpose\n\n{{What this process produces and why it exists. One paragraph.}}\n\n## When to run this\n\n{{Trigger. Be specific: \"within 5 working days of contract signature\", not \"at the start\".}}\n\n## Do not run this if\n\n{{Conditions where this process is the wrong tool. Prevents mechanical misuse.}}\n\n## Inputs required\n\n| Input | Source | Blocker if missing? |\n|---|---|---|\n| {{Search Console access}} | {{Client}} | Yes |\n\n## Knowledge this depends on\n\n{{Links to the concepts in 10-knowledge/ that must be understood to run this well. A process run without understanding produces a document, not a result.}}\n\n## Steps\n\n### 1. {{Step name}}\n\n- **Action:** {{ }}\n- **Tool:** {{ }}\n- **Output:** {{ the artifact this step produces }}\n- **Time:** {{ }}\n- **Watch out for:** {{ }}\n\n### 2. {{Step name}}\n\n- **Action:** {{ }}\n- **Output:** {{ }}\n\n## Definition of done\n\n- [ ] {{Binary, verifiable condition}}\n- [ ] {{ }}\n- [ ] Checklist `{{chk-...}}` fully passed\n- [ ] Deliverable produced from template `{{deliv-...}}` v{{X.Y}}\n\n## Deliverable produced\n\n{{Link to the client deliverable template this SOP fills.}}\n\n## Quality checklist\n\n{{Link to the verification checklist in 20-operations/checklists/.}}\n\n## Common failure points\n\n| Failure | Cause | Prevention |\n|---|---|---|\n| {{ }} | {{ }} | {{ }}\n\n## Changelog\n\n- {{YYYY-MM-DD}} — v1.0 created\n"}, {"file": "tool-profile.md", "path": "00-meta/templates/tool-profile.md", "title": "{{Tool Name}}", "type": "tool", "version": "1.0", "lines": 44, "body": "---\nid: tool-{{SLUG}}\ntitle: {{Tool Name}}\ntype: tool\nstatus: growing\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [{{platform-tag}}]\nrelated: []\n---\n\n# {{Tool Name}}\n\n**Category:** {{crawler / rank tracker / analytics / link data / AI visibility}}\n**Cost:** {{ }} · **Plan I use:** {{ }} · **Alternatives:** {{ }}\n\n## What I use it for\n\n{{The two or three jobs I actually use it for. Not a feature list.}}\n\n## What it is genuinely best at\n\n{{ }}\n\n## Where it is weak or misleading\n\n{{Data limitations, sampling, index freshness. Knowing this is what stops a wrong recommendation.}}\n\n## My standard configuration\n\n{{Settings, saved reports, custom columns, export formats. So I never reconfigure from scratch.}}\n\n## Workflows it appears in\n\n{{Links to SOPs.}}\n\n## Data caveats to disclose to clients\n\n{{Which numbers are estimates and must be labelled as such in reports.}}\n\n## Notes\n\n{{Shortcuts, quirks, API limits, pricing changes.}}\n"}, {"file": "weekly-review.md", "path": "00-meta/templates/weekly-review.md", "title": "Weekly Review — {{YYYY}} Week {{WW}}", "type": "review", "version": "1.0", "lines": 62, "body": "---\nid: rev-w-{{YYYY-WW}}\ntitle: Weekly Review — {{YYYY}} Week {{WW}}\ntype: review\nstatus: evergreen\nversion: 1.0\ncreated: {{YYYY-MM-DD}}\nupdated: {{YYYY-MM-DD}}\ntags: [review]\nrelated: []\n---\n\n# Weekly Review — {{YYYY}} Week {{WW}}\n\n**Period:** {{YYYY-MM-DD}} to {{YYYY-MM-DD}} · **Hours invested:** {{ }}\n\n## 1. Output\n\n| Category | Count | Files |\n|---|---|---|\n| Concepts created | {{ }} | {{ }} |\n| Concepts promoted in status | {{ }} | {{ }} |\n| SOPs / checklists | {{ }} | {{ }} |\n| Client deliverables | {{ }} | {{ }} |\n| Content assets published | {{ }} | {{ }} |\n| Mistakes logged | {{ }} | {{ }} |\n\n## 2. Repository hygiene\n\n- [ ] Every new note has `prerequisites` / `related` / `next` filled\n- [ ] Every link is reciprocated on the other end\n- [ ] Every new note is reachable from a folder README\n- [ ] No orphan files, no `{{PLACEHOLDER}}` left in committed files\n- [ ] Statuses reflect reality\n- [ ] `00-meta/CHANGELOG.md` updated if the system changed\n\n## 3. What worked\n\n{{ }}\n\n## 4. What did not\n\n{{ }}\n\n## 5. Skills honestly assessed\n\n| Skill | Last week | This week | Evidence (file path) |\n|---|---|---|---|\n| {{ }} | {{ }} | {{ }} | {{ }} |\n\n## 6. Client status\n\n| Client | Health | Next milestone | Risk |\n|---|---|---|---|\n| {{ }} | 🟢/🟡/🔴 | {{ }} | {{ }} |\n\n## 7. Next week\n\n- **Learning focus:** {{ }}\n- **One asset to publish:** {{ }}\n- **One repository gap to close:** {{ }}\n- **One thing to stop doing:** {{ }}\n"}], "briefing": "I maintain a Markdown knowledge repository called **SEO Brain** — the permanent operating system for my SEO career. Before helping me, understand its rules. Follow them exactly; do not invent new structure.\n\n**Top-level folders**\n- `00-meta/` — system rules: documentation standard, templates, taxonomy, workflows, master knowledge map\n- `10-knowledge/` — evergreen SEO concepts, one file per concept, no dates, no client names\n- `15-business-playbooks/` — industry-specific reusable playbooks (law firms, dentists, SaaS, e-commerce, real estate, healthcare, education, restaurants, travel, local businesses)\n- `20-operations/` — SOPs, checklists, client deliverable templates, and an agency simulator for practice projects\n- `30-clients/` — one workspace per client, instantiated from the deliverable templates\n- `40-portfolio/` — sanitised case studies and portfolio samples\n- `50-content-engine/` — every concept turned into 11 teaching/marketing assets\n- `60-journal/` — dated daily learning log, mistake journal, weekly and monthly reviews\n- `70-radar/` — dated industry intelligence: Google updates, AI search changes, news\n- `80-library/` — prompts, tool profiles, frameworks, references, glossary\n- `90-archive/` — retired material. Nothing is ever deleted\n\n**Every file starts with YAML frontmatter:**\n```yaml\n---\nid: tech-crawl-budget      # permanent, kebab-case, domain prefix\ntitle: Crawl Budget\ntype: concept              # concept|hub|sop|checklist|template|deliverable|framework|playbook|case-study|simulation|content-asset|journal|review|radar|prompt|tool|reference|glossary\nstatus: seed               # seed|growing|evergreen|deprecated\nversion: 1.0\ncreated: 2026-07-25\nupdated: 2026-07-25\ntags: [technical-seo, crawling]\nprerequisites: [tech-crawling]\nrelated: [tech-robots-txt]\nnext: [tech-log-file-analysis]\n---\n```\n\n**Concept body sections, in this order:** Definition (one sentence) → Why it matters → How it works → How I apply it → Common mistakes → Connections → Sources → Changelog.\n\n**Rules you must respect:**\n1. One canonical location per asset. Never duplicate; link instead.\n2. Links are declared on both ends. If A relates to B, B relates to A.\n3. `id` values are permanent. Titles may change, ids never.\n4. Filenames are `kebab-case.md`, no dates — except journal and radar files, which are named `YYYY-MM-DD.md`.\n5. Every folder has a `README.md` acting as its hub and index.\n6. Nothing is deleted. Outdated material is marked `deprecated` and moved to `90-archive/`.\n7. Tags come from the controlled vocabulary in `00-meta/TAXONOMY.md`. If a new tag is needed, say so explicitly.\n8. No client-confidential data outside `30-clients/`. Redact before anything reaches `40-portfolio/`.\n9. Client documents are instantiated from `20-operations/client-deliverables/` templates, recording the template version used.\n10. Output plain Markdown I can commit directly. Give me the target file path with every file you produce.\n\n**When I teach you something new or we finish a piece of work, your default output is:**\n1. the concept note (created or updated), with connections filled in\n2. any SOP or checklist change it implies\n3. the daily journal entry listing every file touched, by path\n4. an asset-set stub for `50-content-engine/` if the concept is `evergreen`\n\nAsk me for the current contents of a file before rewriting it. Do not guess what a file contains."};</script>
+<script>
+const D = window.__BRAIN__;
+const TICK = '<svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M2 6.4 4.6 9 10 3"/></svg>';
+
+/* ---- storage: works on GitHub Pages, degrades to memory in sandboxes ---- */
+const mem = {};
+const store = {
+  get(k, f) { try { const v = localStorage.getItem(k); return v === null ? f : JSON.parse(v); }
+              catch (e) { return k in mem ? mem[k] : f; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { mem[k] = v; } }
+};
+let done = store.get('brain.nodes', {});
+let checks = store.get('brain.checks', {});
+let repo = store.get('brain.repo', '');
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const el = id => document.getElementById(id);
+const link = (path, label) => repo
+  ? `<a href="${esc(repo.replace(/\/$/,''))}/blob/main/${esc(path)}" target="_blank" rel="noopener">${esc(label||path)}</a>`
+  : esc(label || path);
+
+/* ---- coverage ---- */
+const allNodes = D.chains.flatMap(c => c.nodes);
+const doneCount = () => allNodes.filter(n => done[n.id]).length;
+
+function paintCoverage() {
+  const cov = el('cov');
+  if (!cov) return;
+  const pct = Math.round(doneCount() / allNodes.length * 100);
+  cov.textContent = pct + '%';
+  el('covsub').textContent = doneCount() + ' of ' + allNodes.length + ' concepts written';
+  D.chains.forEach(c => {
+    const d = c.nodes.filter(n => done[n.id]).length;
+    const row = document.querySelector(`[data-chain="${c.n}"]`);
+    if (row) {
+      row.querySelector('.pct').textContent = d + '/' + c.nodes.length;
+      row.querySelectorAll('.dot').forEach((dot, i) => dot.classList.toggle('on', !!done[c.nodes[i].id]));
+    }
+  });
+}
+
+function toggleNode(id) {
+  done[id] ? delete done[id] : done[id] = 1;
+  store.set('brain.nodes', done);
+  document.querySelectorAll(`[data-node="${id}"]`).forEach(n => n.classList.toggle('done', !!done[id]));
+  paintCoverage();
+}
+
+/* ---- sections ---- */
+const SECTIONS = {};
+
+SECTIONS.overview = () => `
+  <p class="eyebrow">Control panel · generated ${esc(D.generated)}</p>
+  <h2>The permanent brain of an SEO career</h2>
+  <p class="lede">Eleven folders, ${allNodes.length} concepts on ${D.chains.length} dependency chains, ${D.templates.length} templates, and a set of rituals that turn every day's work into something reusable. This page is generated from the repository itself — it lives inside it and needs no account, no service and no internet to read.</p>
+
+  <div class="map">
+    <div class="map-head">
+      <div>
+        <h3>Master knowledge map</h3>
+        <p>Each row is a chain of real dependencies, not a topic list. Tick a concept when its note exists and is linked. Progress is saved in this browser.</p>
+      </div>
+      <div class="coverage"><b id="cov">0%</b><span id="covsub">—</span></div>
+    </div>
+    ${D.chains.map(c => `
+      <button class="chain-row" data-chain="${c.n}" data-go="knowledge" data-focus="chain-${c.n}">
+        <span class="cn">${String(c.n).padStart(2,'0')}</span>
+        <span class="cname">${esc(c.name)}</span>
+        <span class="dots">${c.nodes.map(() => '<i class="dot"></i>').join('')}</span>
+        <span class="pct">0/${c.nodes.length}</span>
+      </button>`).join('')}
+  </div>
+
+  <div class="panel">
+    <h3>The three rules everything else follows</h3>
+    <p class="sub">Break these and the system decays into an unsearchable folder of notes.</p>
+    <table><tbody>
+      <tr><td style="width:30px"><code>1</code></td><td><b>One canonical location per asset.</b> A checklist exists once. Everything else links to it.</td></tr>
+      <tr><td><code>2</code></td><td><b>Every file follows the documentation standard.</b> Frontmatter is not optional, not even on a quick note.</td></tr>
+      <tr><td><code>3</code></td><td><b>Every note declares its connections</b> — prerequisites, related, next — on both ends.</td></tr>
+    </tbody></table>
+    <div class="pills">
+      ${D.statuses.map(s => `<span class="pill ${s.status}"><i></i>${esc(s.status)}</span>`).join('')}
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Point this page at your repository</h3>
+    <p class="sub">Paste your GitHub URL and every file path below becomes a live link to the file itself.</p>
+    <div class="repo">
+      <input id="repoin" placeholder="https://github.com/you/seo-brain" value="${esc(repo)}" spellcheck="false">
+      <button class="act" id="reposave">Save</button>
+    </div>
+    <p class="note">Stored in this browser only. Nothing is sent anywhere — this page makes no network requests.</p>
+  </div>`;
+
+SECTIONS.folders = () => `
+  <div class="sec-h"><p class="eyebrow">Structure</p><h2>Eleven folders</h2>
+  <p class="lede">Numbered so the order is deliberate, with gaps so a new domain can be inserted in ten years without renaming anything. Renaming breaks links; gaps prevent renaming.</p></div>
+  <div class="grid g2">
+    ${D.folders.map(f => `
+      <div class="fcard">
+        <span class="fp">${link(f.path + '/README.md', f.path + '/')}</span>
+        <h4>${esc(f.tagline)}</h4>
+        <p>${esc(f.purpose)}</p>
+        <div class="n">${f.files} file${f.files === 1 ? '' : 's'} committed</div>
+      </div>`).join('')}
+  </div>`;
+
+SECTIONS.knowledge = () => `
+  <div class="sec-h"><p class="eyebrow">Curriculum</p><h2>Knowledge chains</h2>
+  <p class="lede">Work left to right. Every arrow is a dependency: a concept you cannot properly understand until the one before it is solid. Tick a node when the note exists, is linked in both directions, and you could teach it.</p></div>
+  ${D.chains.map(c => `
+    <div class="chain-card" id="chain-${c.n}">
+      <header>
+        <h3>${String(c.n).padStart(2,'0')} · ${esc(c.name)}</h3>
+        <span class="home">${esc(c.home)}/</span>
+      </header>
+      <ul class="ladder">
+        ${c.nodes.map(n => `
+          <li class="node ${done[n.id] ? 'done' : ''}" data-node="${esc(n.id)}">
+            <button class="tick" data-tick="${esc(n.id)}" aria-label="Mark ${esc(n.title)} as written">${TICK}</button>
+            <span class="body">
+              <span class="t">${esc(n.title)}</span><br>
+              <span class="p">${link(n.path)}</span>
+            </span>
+          </li>`).join('')}
+      </ul>
+    </div>`).join('')}
+  <div class="panel">
+    <h3>Cross-cutting bridges</h3>
+    <p class="sub">Chains intersect. These links carry the most value in the repository, and each is declared in both notes.</p>
+    <table><tbody>${D.bridges.map(b => `<tr><td><b>${esc(b.pair)}</b></td><td>${esc(b.why)}</td></tr>`).join('')}</tbody></table>
+  </div>`;
+
+SECTIONS.playbooks = () => `
+  <div class="sec-h"><p class="eyebrow">15-business-playbooks</p><h2>Industry playbooks</h2>
+  <p class="lede">A playbook is not general SEO applied to a vertical. It is the set of decisions that are <em>different</em> for that vertical. If a section could be copied into another playbook unchanged, it belongs in the encyclopedia instead.</p></div>
+  <div class="grid g2">
+    ${D.playbooks.map(p => `
+      <div class="fcard">
+        <span class="fp">${link('15-business-playbooks/' + p.slug + '.md', p.slug + '.md')}</span>
+        <h4>${esc(p.name)}</h4>
+        <p>${esc(p.note)}</p>
+      </div>`).join('')}
+  </div>
+  <div class="panel">
+    <h3>What every playbook contains</h3>
+    <p class="sub">Twelve fixed sections, so two playbooks can be compared side by side.</p>
+    <table><tbody>
+      ${D.playbookSections.map((s, i) => `<tr><td style="width:34px"><code>${String(i+1).padStart(2,'0')}</code></td><td>${esc(s)}</td></tr>`).join('')}
+    </tbody></table>
+    <p class="note"><b>Evidence log.</b> Each playbook ends with what you have actually observed, with dates and clients. A playbook with a filled evidence log is a sellable asset. Without one it is a blog post.</p>
+  </div>`;
+
+SECTIONS.operations = () => `
+  <div class="sec-h"><p class="eyebrow">20-operations</p><h2>Operations</h2>
+  <p class="lede">The difference between knowing SEO and shipping it repeatably, for the fortieth time, in three hours.</p></div>
+  <div class="panel">
+    <h3>Client deliverables library</h3>
+    <p class="sub">Every document a client ever receives has a template. Nothing is built from scratch again.</p>
+    <div class="grid g3">${D.deliverables.map(d => `<div class="pill">${esc(d)}</div>`).join('')}</div>
+    <p class="note">Each template carries an internal instruction block inside HTML comments, so it disappears from the client-facing render, and a version stamp recorded on the sent document.</p>
+  </div>
+  <div class="panel">
+    <h3>Agency simulator</h3>
+    <p class="sub">When there is no live client, the practice supplies the work — judged by the same checklists as paid work.</p>
+    <table><tbody>${D.simulations.map(s => `<tr><td style="width:38%"><b>${esc(s.name)}</b></td><td>${esc(s.note)}</td></tr>`).join('')}</tbody></table>
+    <p class="note">Every simulation must leave a trace in the repository. One that does not was entertainment, not practice.</p>
+  </div>
+  <div class="panel">
+    <h3>Client engagement lifecycle</h3>
+    <p class="sub">Each stage consumes a template and produces a filed artifact.</p>
+    <pre>Lead
+ └─ Proposal ─────────── 30-clients/&lt;client&gt;/01-proposal/
+     └─ Discovery ────── 02-discovery/
+         └─ Audit ────── 03-audits/
+             └─ Strategy ── 04-strategy/
+                 └─ Delivery loop ── 05-deliverables/ + 06-reporting/
+                     └─ Close
+                         ├─ Portfolio graduation → 40-portfolio/
+                         ├─ SOP improvements → 20-operations/
+                         ├─ Lessons + mistakes → 60-journal/
+                         └─ Archive → 90-archive/</pre>
+  </div>`;
+
+SECTIONS.content = () => `
+  <div class="sec-h"><p class="eyebrow">50-content-engine</p><h2>Content engine</h2>
+  <p class="lede">One concept, eleven assets, all derived from the same source note. Write an asset from memory and your eleven outputs will quietly contradict each other within a year.</p></div>
+  <div class="panel">
+    <table><thead><tr><th>#</th><th>Asset</th><th>Its one job</th></tr></thead><tbody>
+      ${D.formats.map((f, i) => `<tr><td><code>${String(i+1).padStart(2,'0')}</code></td><td><b>${esc(f.name)}</b></td><td>${esc(f.job)}</td></tr>`).join('')}
+    </tbody></table>
+  </div>
+  <div class="panel">
+    <h3>Staleness</h3>
+    <p class="sub">Each asset set tracks per-format status: not started, drafted, published, or needs update.</p>
+    <p style="margin:0;font-size:13.5px">When a source concept changes materially, every asset in its set is flagged <code>needs update</code> rather than left to rot. This is the mechanism that keeps a two-year-old YouTube video from teaching something you stopped believing eighteen months ago.</p>
+  </div>`;
+
+SECTIONS.rituals = () => `
+  <div class="sec-h"><p class="eyebrow">Workflows</p><h2>Rituals</h2>
+  <p class="lede">A repository without rituals becomes a graveyard. Progress here is saved in this browser; reset it at the start of each cycle.</p></div>
+  <div class="panel">
+    <h3>The harvest loop · daily, 15 minutes</h3>
+    <p class="sub">Everything learned becomes repository assets the same day. Nothing waits for "when I have time to write it up".</p>
+    <table><tbody>${D.harvest.map(h => `<tr><td style="width:26%"><b>${esc(h.stage)}</b></td><td><code>${esc(h.path)}</code><br><span style="color:var(--ink-3)">${esc(h.note)}</span></td></tr>`).join('')}</tbody></table>
+    <p class="note">Definition of done for a learning day: the journal entry lists every file created or updated, by path. Empty list, nothing permanent.</p>
+  </div>
+  <div class="panel">
+    <div class="copybar"><div><h3>Weekly review</h3><p class="sub" style="margin:0">Sunday, 45 minutes</p></div>
+      <button class="act" data-reset="w">Reset</button></div>
+    <ul class="chk">${D.weekly.map((t, i) => `
+      <li class="${checks['w'+i] ? 'done' : ''}"><input type="checkbox" id="w${i}" data-chk="w${i}" ${checks['w'+i] ? 'checked' : ''}><label for="w${i}">${esc(t)}</label></li>`).join('')}
+    </ul>
+  </div>
+  <div class="panel">
+    <div class="copybar"><div><h3>Monthly review</h3><p class="sub" style="margin:0">Last day of the month, 90 minutes</p></div>
+      <button class="act" data-reset="m">Reset</button></div>
+    <ul class="chk">${D.monthly.map((t, i) => `
+      <li class="${checks['m'+i] ? 'done' : ''}"><input type="checkbox" id="m${i}" data-chk="m${i}" ${checks['m'+i] ? 'checked' : ''}><label for="m${i}">${esc(t)}</label></li>`).join('')}
+    </ul>
+  </div>`;
+
+SECTIONS.standard = () => `
+  <div class="sec-h"><p class="eyebrow">00-meta</p><h2>Documentation standard</h2>
+  <p class="lede">Second brains do not fail from lack of content. They fail from inconsistency — three formats for one note type, four names for one tag, links pointing nowhere.</p></div>
+  <div class="panel">
+    <h3>Frontmatter</h3>
+    <p class="sub">Opens every file in the repository.</p>
+    <table><thead><tr><th>Field</th><th>Value</th><th>Rule</th></tr></thead><tbody>
+      ${D.frontmatter.map(f => `<tr><td><code>${esc(f.field)}</code></td><td>${esc(f.value)}</td><td style="color:var(--ink-3)">${esc(f.note)}</td></tr>`).join('')}
+    </tbody></table>
+  </div>
+  <div class="panel">
+    <h3>Status lifecycle</h3>
+    <table><thead><tr><th>Status</th><th>Meaning</th><th>Bar to clear</th></tr></thead><tbody>
+      ${D.statuses.map(s => `<tr><td><span class="pill ${s.status}"><i></i>${esc(s.status)}</span></td><td>${esc(s.meaning)}</td><td style="color:var(--ink-3)">${esc(s.bar)}</td></tr>`).join('')}
+    </tbody></table>
+  </div>
+  <div class="panel">
+    <h3>Non-negotiables</h3>
+    <table><tbody>${D.rules.map((r, i) => `<tr><td style="width:34px"><code>${String(i+1).padStart(2,'0')}</code></td><td>${esc(r)}</td></tr>`).join('')}</tbody></table>
+  </div>
+  <div class="panel">
+    <h3>Concept body</h3>
+    <p class="sub">Fixed section order, so any note can be read at speed.</p>
+    <pre>Definition (one sentence, client-safe)
+Why it matters (business impact)
+How it works (mechanics)
+How I apply it (my method — what makes this note mine)
+Common mistakes (linked to the mistake journal)
+Connections (prerequisites / related / next / used in)
+Open questions (the most valuable section in a seed note)
+Sources
+Changelog</pre>
+  </div>`;
+
+SECTIONS.templates = () => `
+  <div class="sec-h"><p class="eyebrow">00-meta/templates</p><h2>Template library</h2>
+  <p class="lede">No file in this repository is created from scratch. Open one, copy it, fill it in, delete the instruction comments.</p></div>
+  <div class="tlist">
+    ${D.templates.map((t, i) => `
+      <details class="titem">
+        <summary>
+          <span><span class="tt">${esc(t.title)}</span><span class="tm">${esc(t.file)} · ${esc(t.type)} · v${esc(t.version)} · ${t.lines} lines</span></span>
+          <span class="act">Open</span>
+        </summary>
+        <div class="tbody">
+          <div class="copybar">
+            <span class="tm">${link(t.path)}</span>
+            <button class="act" data-copy="tpl-${i}">Copy template</button>
+          </div>
+          <pre id="tpl-${i}">${esc(t.body)}</pre>
+        </div>
+      </details>`).join('')}
+  </div>`;
+
+SECTIONS.briefing = () => `
+  <div class="sec-h"><p class="eyebrow">Portability</p><h2>Agent briefing</h2>
+  <p class="lede">This repository must never depend on one AI account, one chat history or one vendor. Paste this block into any assistant, anywhere, and it will understand the system in one message.</p></div>
+  <div class="panel">
+    <div class="copybar">
+      <span class="tm">${link('00-meta/AGENT-BRIEFING.md')}</span>
+      <button class="act" data-copy="brief">Copy briefing</button>
+    </div>
+    <pre id="brief">${esc(D.briefing)}</pre>
+  </div>
+  <div class="panel">
+    <h3>Rebuilding this page</h3>
+    <p class="sub">The page is generated from the repository, so it never drifts out of date.</p>
+    <pre>python3 tools/build-dashboard.py</pre>
+    <p class="note">No dependencies beyond Python 3.8. Commit the regenerated <code>index.html</code> and GitHub Pages updates within a minute.</p>
+  </div>`;
+
+/* ---- search ---- */
+const INDEX = [
+  ...D.folders.map(f => ({ t: f.path + ' — ' + f.tagline, k: 'folder', go: 'folders' })),
+  ...D.chains.map(c => ({ t: c.name, k: 'chain', go: 'knowledge', focus: 'chain-' + c.n })),
+  ...D.chains.flatMap(c => c.nodes.map(n =>
+      ({ t: n.title, k: 'concept · ' + c.name, go: 'knowledge', focus: 'chain-' + c.n }))),
+  ...D.templates.map(t => ({ t: t.title, k: 'template', go: 'templates' })),
+  ...D.playbooks.map(p => ({ t: p.name + ' playbook', k: 'playbook', go: 'playbooks' })),
+  ...D.deliverables.map(d => ({ t: d, k: 'deliverable', go: 'operations' })),
+  ...D.simulations.map(s => ({ t: s.name, k: 'simulation', go: 'operations' })),
+  ...D.formats.map(f => ({ t: f.name, k: 'content asset', go: 'content' })),
+  ...D.frontmatter.map(f => ({ t: f.field + ' — ' + f.value, k: 'standard', go: 'standard' })),
+  ...D.weekly.map(w => ({ t: w, k: 'weekly review', go: 'rituals' })),
+  ...D.monthly.map(m => ({ t: m, k: 'monthly review', go: 'rituals' })),
+];
+
+function runSearch(q) {
+  const box = el('view');
+  const hits = INDEX.filter(r => r.t.toLowerCase().includes(q.toLowerCase())).slice(0, 60);
+  box.innerHTML = `
+    <div class="sec-h"><p class="eyebrow">Search</p><h2>${hits.length} match${hits.length === 1 ? '' : 'es'} for "${esc(q)}"</h2></div>
+    ${hits.length ? `<div class="results">${hits.map(h => `
+      <button class="result" data-go="${h.go}" ${h.focus ? `data-focus="${h.focus}"` : ''}>
+        <span class="rt">${esc(h.t)}</span><span class="rk">${esc(h.k)}</span>
+      </button>`).join('')}</div>`
+    : `<div class="empty">Nothing matches. Try a concept, a template name or an industry.</div>`}`;
+  document.querySelectorAll('.nav button').forEach(b => b.setAttribute('aria-current', 'false'));
+}
+
+/* ---- routing ---- */
+function show(name, focus) {
+  const s = SECTIONS[name] || SECTIONS.overview;
+  el('view').innerHTML = s();
+  document.querySelectorAll('.nav button').forEach(b =>
+    b.setAttribute('aria-current', String(b.dataset.go === name)));
+  if (name === 'overview') paintCoverage();
+  if (focus) {
+    const target = el(focus);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.scrollTo({ top: 0 });
+  }
+  try { if (location.hash.slice(1) !== name) history.replaceState(null, '', '#' + name); }
+  catch (e) { /* file:// or sandboxed — navigation still works via the rail */ }
+}
+
+/* ---- events ---- */
+document.addEventListener('click', e => {
+  const go = e.target.closest('[data-go]');
+  if (go) { show(go.dataset.go, go.dataset.focus); return; }
+
+  const tick = e.target.closest('[data-tick]');
+  if (tick) { toggleNode(tick.dataset.tick); return; }
+
+  const copy = e.target.closest('[data-copy]');
+  if (copy) {
+    const text = el(copy.dataset.copy).textContent;
+    const done = () => { const o = copy.textContent; copy.textContent = 'Copied'; copy.classList.add('on');
+      setTimeout(() => { copy.textContent = o; copy.classList.remove('on'); }, 1400); };
+    if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, fallback); } else { fallback(); }
+    function fallback() {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (err) { copy.textContent = 'Select and copy'; }
+      ta.remove();
+    }
+    return;
+  }
+
+  const reset = e.target.closest('[data-reset]');
+  if (reset) {
+    const p = reset.dataset.reset;
+    Object.keys(checks).forEach(k => { if (k[0] === p) delete checks[k]; });
+    store.set('brain.checks', checks);
+    show('rituals');
+    return;
+  }
+
+  if (e.target.id === 'reposave') {
+    repo = el('repoin').value.trim().replace(/\/$/, '');
+    store.set('brain.repo', repo);
+    show('overview');
+  }
+});
+
+document.addEventListener('change', e => {
+  const c = e.target.closest('[data-chk]');
+  if (!c) return;
+  const k = c.dataset.chk;
+  c.checked ? checks[k] = 1 : delete checks[k];
+  store.set('brain.checks', checks);
+  c.closest('li').classList.toggle('done', c.checked);
+});
+
+const searchbox = el('q');
+searchbox.addEventListener('input', () => {
+  const q = searchbox.value.trim();
+  q.length > 1 ? runSearch(q) : show(location.hash.slice(1) || 'overview');
+});
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchbox) { e.preventDefault(); searchbox.focus(); }
+  if (e.key === 'Escape' && document.activeElement === searchbox) { searchbox.value = ''; searchbox.blur(); show('overview'); }
+});
+
+window.addEventListener('hashchange', () => show(location.hash.slice(1) || 'overview'));
+show(location.hash.slice(1) || 'overview');
+</script>
+</body>
+</html>
