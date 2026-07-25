@@ -1,0 +1,24 @@
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Obsidian workspace state (keep plugin config if you want it versioned)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Local scratch — never commit half-thoughts
+_scratch/
+*.tmp
+
+# Client confidential exports: raw crawls, analytics dumps, credentials
+**/00-raw-data/
+*.csv.gz
+*.sqlite
+credentials.md
+.env
