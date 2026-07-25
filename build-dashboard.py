@@ -21,6 +21,9 @@ from datetime import date
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Branch used to build GitHub links. Change if your default branch is not main.
+BRANCH = "main"
+
 # ---------------------------------------------------------------------------
 # 1. Folder registry
 # ---------------------------------------------------------------------------
@@ -307,6 +310,10 @@ def count_files():
     return counts
 
 
+def exists(path):
+    return os.path.exists(os.path.join(ROOT, path))
+
+
 def build_payload():
     counts = count_files()
     chains = []
@@ -318,20 +325,25 @@ def build_payload():
             else:
                 title, folder = n, home
             slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+            path = "%s/%s.md" % (folder, slug)
             parsed.append({
                 "id": "%s/%s" % (folder, slug),
                 "title": title,
-                "path": "%s/%s.md" % (folder, slug),
+                "path": path,
+                "exists": exists(path),
             })
         chains.append({"n": i, "name": name, "home": home, "nodes": parsed})
 
     return {
         "generated": date.today().isoformat(),
-        "folders": [{"path": f, "tagline": t, "purpose": p, "files": counts.get(f, 0)}
+        "branch": BRANCH,
+        "folders": [{"path": f, "tagline": t, "purpose": p, "files": counts.get(f, 0),
+                     "exists": exists(f + "/README.md")}
                     for f, t, p in FOLDERS],
         "chains": chains,
         "bridges": [{"pair": a, "why": b} for a, b in BRIDGES],
-        "playbooks": [{"name": n, "slug": s, "note": w} for n, s, w in PLAYBOOKS],
+        "playbooks": [{"name": n, "slug": s, "note": w,
+                       "exists": exists("15-business-playbooks/%s.md" % s)} for n, s, w in PLAYBOOKS],
         "playbookSections": PLAYBOOK_SECTIONS,
         "formats": [{"name": n, "job": j} for n, j in CONTENT_FORMATS],
         "deliverables": DELIVERABLES,
@@ -463,6 +475,9 @@ section[hidden]{display:none}
 .node.done .t{color:var(--ink-3)}
 .node .p{font-family:var(--mono);font-size:11px;color:var(--ink-3);word-break:break-all}
 .node .p a{border-bottom-color:transparent}
+a.tocreate{color:var(--ink-3);border-bottom:1px dashed var(--rule)}
+a.tocreate:hover{color:var(--growing);border-bottom-color:var(--growing)}
+a.tocreate:hover::after{content:" · create";color:var(--growing)}
 
 /* tables */
 table{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -577,9 +592,17 @@ let repo = store.get('brain.repo', '');
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const el = id => document.getElementById(id);
-const link = (path, label) => repo
-  ? `<a href="${esc(repo.replace(/\/$/,''))}/blob/main/${esc(path)}" target="_blank" rel="noopener">${esc(label||path)}</a>`
-  : esc(label || path);
+/* A path that exists links to the file. A path that does not yet exist links to
+   GitHub's new-file editor, prefilled with exactly that path — so an unwritten
+   concept is one click from an open editor instead of a 404. */
+const link = (path, label, exists = true) => {
+  const text = esc(label || path);
+  if (!repo) return text;
+  const base = esc(repo.replace(/\/$/, ''));
+  return exists
+    ? `<a href="${base}/blob/${D.branch}/${esc(path)}" target="_blank" rel="noopener">${text}</a>`
+    : `<a class="tocreate" href="${base}/new/${D.branch}?filename=${encodeURIComponent(path)}" target="_blank" rel="noopener" title="Not written yet — opens a new file at this path">${text}</a>`;
+};
 
 /* ---- coverage ---- */
 const allNodes = D.chains.flatMap(c => c.nodes);
@@ -662,7 +685,7 @@ SECTIONS.folders = () => `
   <div class="grid g2">
     ${D.folders.map(f => `
       <div class="fcard">
-        <span class="fp">${link(f.path + '/README.md', f.path + '/')}</span>
+        <span class="fp">${link(f.path + '/README.md', f.path + '/', f.exists)}</span>
         <h4>${esc(f.tagline)}</h4>
         <p>${esc(f.purpose)}</p>
         <div class="n">${f.files} file${f.files === 1 ? '' : 's'} committed</div>
@@ -671,7 +694,8 @@ SECTIONS.folders = () => `
 
 SECTIONS.knowledge = () => `
   <div class="sec-h"><p class="eyebrow">Curriculum</p><h2>Knowledge chains</h2>
-  <p class="lede">Work left to right. Every arrow is a dependency: a concept you cannot properly understand until the one before it is solid. Tick a node when the note exists, is linked in both directions, and you could teach it.</p></div>
+  <p class="lede">Work left to right. Every arrow is a dependency: a concept you cannot properly understand until the one before it is solid. Tick a node when the note exists, is linked in both directions, and you could teach it.</p>
+  <p class="note" style="max-width:64ch">Solid paths link to a committed file. <span style="border-bottom:1px dashed var(--rule);color:var(--ink-3)">Dashed paths</span> are notes that do not exist yet — clicking one opens a new file on GitHub at exactly that path, ready for the concept template.</p></div>
   ${D.chains.map(c => `
     <div class="chain-card" id="chain-${c.n}">
       <header>
@@ -684,7 +708,7 @@ SECTIONS.knowledge = () => `
             <button class="tick" data-tick="${esc(n.id)}" aria-label="Mark ${esc(n.title)} as written">${TICK}</button>
             <span class="body">
               <span class="t">${esc(n.title)}</span><br>
-              <span class="p">${link(n.path)}</span>
+              <span class="p">${link(n.path, null, n.exists)}</span>
             </span>
           </li>`).join('')}
       </ul>
@@ -701,7 +725,7 @@ SECTIONS.playbooks = () => `
   <div class="grid g2">
     ${D.playbooks.map(p => `
       <div class="fcard">
-        <span class="fp">${link('15-business-playbooks/' + p.slug + '.md', p.slug + '.md')}</span>
+        <span class="fp">${link('15-business-playbooks/' + p.slug + '.md', p.slug + '.md', p.exists)}</span>
         <h4>${esc(p.name)}</h4>
         <p>${esc(p.note)}</p>
       </div>`).join('')}
